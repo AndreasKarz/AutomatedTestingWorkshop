@@ -100,6 +100,7 @@
       <LastGenOutput>FrameworkTests.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="readme.md" />
     <None Include="xunit.runner.json" />
   </ItemGroup>
   <ItemGroup>
