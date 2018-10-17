@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 using System;
 using System.Diagnostics;
 using TechTalk.SpecFlow;
@@ -23,6 +24,12 @@ namespace AutomatedTestingWorkshop
                     chromeOptions.AcceptInsecureCertificates = true;
                     Driver = new ChromeDriver("./", chromeOptions);
                     break;
+                case "Firefox":
+                    FirefoxOptions firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.AcceptInsecureCertificates = true;
+                    firefoxOptions.AddArguments("-purgecaches", "-private");
+                    Driver = new FirefoxDriver("./", firefoxOptions);
+                    break;
             }
             Wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver, TimeSpan.FromSeconds(30));
             Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
@@ -41,6 +48,20 @@ namespace AutomatedTestingWorkshop
                     _browserName = Environment.GetEnvironmentVariable("TEST_BROWSER");
                 }
             #endregion
+        }
+
+        [BeforeScenario(Order = 2)]
+        [Scope(Tag = "Chrome")]
+        public void SetChrome()
+        {
+            _browserName = "Chrome";
+        }
+
+        [BeforeScenario(Order = 2)]
+        [Scope(Tag = "Firefox")]
+        public void SetFirefox()
+        {
+            _browserName = "Firefox";
         }
 
         [BeforeScenario(Order = 3)]
