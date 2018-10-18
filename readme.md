@@ -385,33 +385,190 @@ For more detailed information about hooks I recommend the post [Using Hooks to E
 
 ## xUnit
 
+xUnit is required as test runner and in the step files to verify the assertions. 
+
 ### Assertion
 
-### Logging
+The assertion is needed in the [Then...] steps to validate the expected result. A small dummy sample you will find in the *GherkinSample.feature.steps.cs* file.
+
+With assertions, one point is very important:
+
+**Each scenario should only contain ONE test!** 
+
+Otherwise you will never know if everything works as expected. If, for example, 5 tests are executed in one scenario and the 3rd test terminates with an error, then it is not clear whether points 4 and 5 would have worked.
+
+Therefore again very important: **ONE scenario contains ONE test**!
+
+For the most common assertion please checkout this [cheat sheet](https://lukewickstead.wordpress.com/2013/01/16/xunit-cheat-sheet/#index73) from line #73
 
 ### Configuration
 
+For the configuration details please visit the [original documentation](https://xunit.github.io/docs/configuring-with-json)
+
+### Getting Test Results in Visual Studio Team Services
+
+Please visit the [original documentation](https://xunit.github.io/docs/getting-test-results-in-vsts)
+
 ## Atomic Design
+
+Before we come to the most important part of the workshop, we make a short excursion to the topic atomic design to understand. This will help us later to build a clean and modular framework.
+
+Please read also the [original documentation](http://bradfrost.com/blog/post/atomic-web-design/) from Brad Frost. 
 
 ### Atoms
 
+Atoms are the basic building blocks of matter. Applied to web interfaces, atoms are our HTML tags, such as a form label, an input or a button.   
+
 #### Default Props
+
+All the atoms have some defaut values like width, height or the position.  To simplify the structure of the atoms, the extender class SwissLife.Selenium.IWebElement.DefaultProps.cs is implemented. It provides all getter for the default props. Thus only the specific properties and methods have to be defined in the atom itself.
+
+```c#
+using OpenQA.Selenium;
+using SwissLife.Selenium.IWebElement.DefaultProps;
+
+public class InputText : DefaultProps
+{
+    //InputText has now all the getters for the default props
+}
+```
 
 ### Molecules
 
+Molecules are React components at altitude. Let's take again the example text input. The HTML input element is the atom, but our React component is a combination of html input field, label and a description and/or error message. At this moment the React component TextInput is a molecule.
+
+Molecule tests are carried out directly on the style guide. This includes, for example, that the floating label floats correctly and does not overlay the content above or that an error message has the correct color and is displayed at the correct position.
+
+Also all tests of the Responsive Design and the behavior on mobile devices of the molecules are executed on the styleguide.
+
+### Organisms
+
+An organism is a composition of different molecules. This can be, for example, a contact form. This consists of several text entries - some with special functions, such as an e-mail field.
+
+The form is therefore an organism whose basic behavior is also tested on the style guide - especially the responsive behavior. 
+
 ### Pages
+
+The pages are a composition of different organisms and/or molecules.
+
+The tests of the pages are those which will be performed later in the CD pipeline. These only contain the functional tests, i.e. if the correct error messages are displayed, the correct confirmation pages appear or the texts are correct in all languages.
+
+### Summary
+
+With this understanding we can build the framework very modular and flexible. 
+
+Imagine if the color of a text input changes at some point. With the concept of Atomic design we only have to adapt the test to the text atom of the TextInput molecule and that only in one place.
 
 ## Selenium
 
+*Selenium automates browsers*. What you do with that power is entirely up to you.  And Selenium is not only powerful, but is also the main ingredient in automated UI testing.
+
 ### Driver
+
+The driver is the API to the corresponding browser. Later Selenium will use this API to control the browser remotely. Each browser has its own driver, the corresponding browser is installed, of course.
+
+For platforms, which are not locally available, BrowserStack can be used. This topic will be dealt with in another workshop. 
+
+Currently we have installed the driver for Chrome and Firefox in our example. Now it's time to install the rest as well over the Nuget Console.
+
+```npm
+Install-Package Selenium.WebDriver.IEDriver
+Install-Package Selenium.WebDriver.IEDriver64
+Install-Package Selenium.WebDriver.MicrosoftDriver
+
+```
 
 #### Timeouts
 
-#### Capabilities
+Specifies the amount of time the driver should wait when searching for an element if it is not immediately present.
+
+When searching for a single element, the driver should poll the page until the element has been found, or this timeout expires before throwing a *NoSuchElementException*. When searching for multiple elements, the driver should poll the page until at least one element has been found or this timeout has expired.
+
+In our example, this is defined in the hooks in the _initDriver method. 
+
+```c#
+Wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver, TimeSpan.FromSeconds(30));
+Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+```
+
+#### Options/Capabilities
+
+This is used to make basic settings for the browser. This setting is debrecated, but will be used later for BrowserStack.
+
+In this workshop we will therefore use the Driver options. Please copy the following code in the hooks of the _initBrowser method into the switch:
+
+```c#
+case "Edge":
+    Driver = new EdgeDriver("./");
+    break;
+case "IE":
+    InternetExplorerOptions options = new InternetExplorerOptions();
+    options.EnsureCleanSession = true;
+    options.IgnoreZoomLevel = true;               
+    options.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
+    options.InitialBrowserUrl = "https://www.swisslife.com/";
+    Driver = new InternetExplorerDriver("./", options);
+    Driver.Navigate().Refresh();
+    Driver.LocalStorageClear();
+    break;
+
+```
+
+And in the *BeforeScenario Order = 2* region
+
+```c#
+[BeforeScenario(Order = 2)]
+[Scope(Tag = "Edge")]
+public void SetEdge()
+{
+    _testBrowser = "Edge";
+}
+
+[BeforeScenario(Order = 2)]
+[Scope(Tag = "IE")]
+public void SetIE()
+{
+    _testBrowser = "IE";
+}
+```
 
 #### Extensions
 
+The driver does not (yet) provide certain functionalities. Therefore we have installed the extension *SwissLife.Selenium.Webdriver.Extensions*. 
+
+This will add the following functionalities to the driver:
+
+#### NavigateToPath
+
+Allows to navigate with relative URLs
+
+#### LocalStorage
+
+LocalStorageSetItem, LocalStorageGetItem and LocalStorageClear to manipulate the LocalStorage.
+
+#### IsElementPresent
+
+Check if a elemnt is really present with some options
+
+#### GetElementSafe
+
+Get a element if this really exists and it's visible and it's clickable.
+
+#### SetMobileSize
+
+Resize the browser to a specific width and height. Without parameters the function will use 750 * 1024 pixels.
+
+#### ExecuteScript
+
+Wrapper methode to execute a JavaScript.
+
+#### GetRootDirectory
+
+Get the repository root directory
+
 ### Selectors
+
+
 
 #### ClassName
 
