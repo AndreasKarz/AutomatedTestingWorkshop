@@ -160,12 +160,71 @@ this.FeatureBackground();
         [Xunit.FactAttribute(DisplayName="Test only for Firefox")]
         [Xunit.TraitAttribute("FeatureTitle", "Gherkin samples")]
         [Xunit.TraitAttribute("Description", "Test only for Firefox")]
+        [Xunit.TraitAttribute("Category", "browser")]
         [Xunit.TraitAttribute("Category", "Firefox")]
         public virtual void TestOnlyForFirefox()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Test only for Firefox", null, new string[] {
+                        "browser",
                         "Firefox"});
 #line 36
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.FactAttribute(DisplayName="Test only for Internet Explorer")]
+        [Xunit.TraitAttribute("FeatureTitle", "Gherkin samples")]
+        [Xunit.TraitAttribute("Description", "Test only for Internet Explorer")]
+        [Xunit.TraitAttribute("Category", "browser")]
+        [Xunit.TraitAttribute("Category", "IE")]
+        public virtual void TestOnlyForInternetExplorer()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Test only for Internet Explorer", null, new string[] {
+                        "browser",
+                        "IE"});
+#line 40
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.FactAttribute(DisplayName="Test only for Edge")]
+        [Xunit.TraitAttribute("FeatureTitle", "Gherkin samples")]
+        [Xunit.TraitAttribute("Description", "Test only for Edge")]
+        [Xunit.TraitAttribute("Category", "browser")]
+        [Xunit.TraitAttribute("Category", "Edge")]
+        public virtual void TestOnlyForEdge()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Test only for Edge", null, new string[] {
+                        "browser",
+                        "Edge"});
+#line 44
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.FactAttribute(DisplayName="Test only for Chrome")]
+        [Xunit.TraitAttribute("FeatureTitle", "Gherkin samples")]
+        [Xunit.TraitAttribute("Description", "Test only for Chrome")]
+        [Xunit.TraitAttribute("Category", "browser")]
+        [Xunit.TraitAttribute("Category", "Chrome")]
+        public virtual void TestOnlyForChrome()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Test only for Chrome", null, new string[] {
+                        "browser",
+                        "Chrome"});
+#line 48
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 9

@@ -1,4 +1,5 @@
-﻿using TechTalk.SpecFlow;
+﻿using OpenQA.Selenium;
+using TechTalk.SpecFlow;
 using Xunit;
 
 namespace AutomatedTestingWorkshop.GherkinSpecs
@@ -39,6 +40,18 @@ namespace AutomatedTestingWorkshop.GherkinSpecs
         [Then(@"I see all my tabs")]
         public void ThenISeeAllMyTabs(Table table)
         {
+            IWebElement PhoneNumber = Hooks.Driver.FindElement(By.CssSelector(".shop-phone"));
+
+            string Label = PhoneNumber.Text;
+            int Left = PhoneNumber.Location.X;
+            int Top = PhoneNumber.Location.Y;
+            int Width = PhoneNumber.Size.Width;
+            string VAlign = PhoneNumber.GetCssValue("vertical-align");
+            bool Enabled = PhoneNumber.Enabled;
+            bool Displayed = PhoneNumber.Displayed;
+            string ClassName = PhoneNumber.GetAttribute("class");
+            string TagName = PhoneNumber.TagName;
+
             var x = 1;
         }
 

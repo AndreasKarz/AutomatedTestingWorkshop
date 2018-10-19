@@ -1,6 +1,9 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.IE;
+using SwissLife.Selenium.Webdriver.Extensions;
 using System;
 using System.Diagnostics;
 using TechTalk.SpecFlow;
@@ -29,6 +32,19 @@ namespace AutomatedTestingWorkshop
                     firefoxOptions.AcceptInsecureCertificates = true;
                     firefoxOptions.AddArguments("-purgecaches", "-private");
                     Driver = new FirefoxDriver("./", firefoxOptions);
+                    break;
+                case "Edge":
+                    Driver = new EdgeDriver("./");
+                    break;
+                case "IE":
+                    InternetExplorerOptions options = new InternetExplorerOptions();
+                    options.EnsureCleanSession = true;
+                    options.IgnoreZoomLevel = true;
+                    options.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
+                    options.InitialBrowserUrl = "https://www.swisslife.com/";
+                    Driver = new InternetExplorerDriver("./", options);
+                    Driver.Navigate().Refresh();
+                    Driver.LocalStorageClear();
                     break;
             }
             Wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver, TimeSpan.FromSeconds(30));
@@ -62,6 +78,20 @@ namespace AutomatedTestingWorkshop
         public void SetFirefox()
         {
             _browserName = "Firefox";
+        }
+
+        [BeforeScenario(Order = 2)]
+        [Scope(Tag = "Edge")]
+        public void SetEdge()
+        {
+            _browserName = "Edge";
+        }
+
+        [BeforeScenario(Order = 2)]
+        [Scope(Tag = "IE")]
+        public void SetIE()
+        {
+            _browserName = "IE";
         }
 
         [BeforeScenario(Order = 3)]

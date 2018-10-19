@@ -32,6 +32,18 @@ Scenario: Check the tabs
     | 2   | DRESSES  |
     | 3   | T-SHIRTS |
 
-@Firefox
+@browser @Firefox 
 Scenario: Test only for Firefox
+	# Given is set by background
+
+@browser @IE
+Scenario: Test only for Internet Explorer
+	# Given is set by background
+
+@browser @Edge
+Scenario: Test only for Edge
+	# Given is set by background
+
+@browser @Chrome
+Scenario: Test only for Chrome
 	# Given is set by background

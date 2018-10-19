@@ -133,9 +133,15 @@
     <Error Condition="!Exists('..\packages\xunit.runner.console.2.4.0\build\xunit.runner.console.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.console.2.4.0\build\xunit.runner.console.props'))" />
     <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.4.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.4.0\build\net20\xunit.runner.visualstudio.props'))" />
     <Error Condition="!Exists('..\packages\Selenium.Firefox.WebDriver.0.22.0\build\Selenium.Firefox.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.Firefox.WebDriver.0.22.0\build\Selenium.Firefox.WebDriver.targets'))" />
+    <Error Condition="!Exists('..\packages\Selenium.WebDriver.IEDriver.3.14.0\build\Selenium.WebDriver.IEDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.IEDriver.3.14.0\build\Selenium.WebDriver.IEDriver.targets'))" />
+    <Error Condition="!Exists('..\packages\Selenium.WebDriver.IEDriver64.3.11.0.1\build\Selenium.WebDriver.IEDriver64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.IEDriver64.3.11.0.1\build\Selenium.WebDriver.IEDriver64.targets'))" />
+    <Error Condition="!Exists('..\packages\Selenium.WebDriver.MicrosoftDriver.17.17134.0\build\Selenium.WebDriver.MicrosoftDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.MicrosoftDriver.17.17134.0\build\Selenium.WebDriver.MicrosoftDriver.targets'))" />
   </Target>
   <Import Project="..\packages\Selenium.Chrome.WebDriver.2.42\build\Selenium.Chrome.WebDriver.targets" Condition="Exists('..\packages\Selenium.Chrome.WebDriver.2.42\build\Selenium.Chrome.WebDriver.targets')" />
   <Import Project="..\packages\xunit.core.2.4.0\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.4.0\build\xunit.core.targets')" />
   <Import Project="..\packages\SpecFlow.2.4.0\build\SpecFlow.targets" Condition="Exists('..\packages\SpecFlow.2.4.0\build\SpecFlow.targets')" />
   <Import Project="..\packages\Selenium.Firefox.WebDriver.0.22.0\build\Selenium.Firefox.WebDriver.targets" Condition="Exists('..\packages\Selenium.Firefox.WebDriver.0.22.0\build\Selenium.Firefox.WebDriver.targets')" />
+  <Import Project="..\packages\Selenium.WebDriver.IEDriver.3.14.0\build\Selenium.WebDriver.IEDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.IEDriver.3.14.0\build\Selenium.WebDriver.IEDriver.targets')" />
+  <Import Project="..\packages\Selenium.WebDriver.IEDriver64.3.11.0.1\build\Selenium.WebDriver.IEDriver64.targets" Condition="Exists('..\packages\Selenium.WebDriver.IEDriver64.3.11.0.1\build\Selenium.WebDriver.IEDriver64.targets')" />
+  <Import Project="..\packages\Selenium.WebDriver.MicrosoftDriver.17.17134.0\build\Selenium.WebDriver.MicrosoftDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.MicrosoftDriver.17.17134.0\build\Selenium.WebDriver.MicrosoftDriver.targets')" />
 </Project>

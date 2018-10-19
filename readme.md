@@ -478,6 +478,14 @@ Install-Package Selenium.WebDriver.MicrosoftDriver
 
 ```
 
+#### Cookies
+
+TODO
+
+#### Navigate
+
+TODO
+
 #### Timeouts
 
 Specifies the amount of time the driver should wait when searching for an element if it is not immediately present.
@@ -521,99 +529,274 @@ And in the *BeforeScenario Order = 2* region
 [Scope(Tag = "Edge")]
 public void SetEdge()
 {
-    _testBrowser = "Edge";
+    _browserName = "Edge";
 }
 
 [BeforeScenario(Order = 2)]
 [Scope(Tag = "IE")]
 public void SetIE()
 {
-    _testBrowser = "IE";
+    _browserName = "IE";
 }
 ```
 
 #### Extensions
 
-The driver does not (yet) provide certain functionalities. Therefore we have installed the extension *SwissLife.Selenium.Webdriver.Extensions*. 
+The driver does not (yet) provide certain functionalities. Therefore we have installed the extension *SwissLife.Selenium.Webdriver.Extensions*. More information about you will find in the source code on [GitHub](https://github.com/AndreasKarz/SeleniumWebdriverExtensions).
 
-This will add the following functionalities to the driver:
+This package will add the following functionalities to the driver:
 
-#### NavigateToPath
+##### NavigateToPath
 
 Allows to navigate with relative URLs
 
-#### LocalStorage
+##### LocalStorage
 
 LocalStorageSetItem, LocalStorageGetItem and LocalStorageClear to manipulate the LocalStorage.
 
-#### IsElementPresent
+##### IsElementPresent
 
-Check if a elemnt is really present with some options
+Check if a element is really present with some options
 
-#### GetElementSafe
+##### GetElementSafe
 
 Get a element if this really exists and it's visible and it's clickable.
 
-#### SetMobileSize
+##### SetMobileSize
 
 Resize the browser to a specific width and height. Without parameters the function will use 750 * 1024 pixels.
 
-#### ExecuteScript
+##### ExecuteScript
 
 Wrapper methode to execute a JavaScript.
 
-#### GetRootDirectory
+##### GetRootDirectory
 
 Get the repository root directory
 
-### Selectors
+### Selectors (By)
 
+The selectors are used to identify the DOM elements in the browser. His used as a parameter for the driver method FindElement or FindElements, which searches for the element in the DOM.
 
+Here it is extremely important to have understood Atomic Design. You should always keep in mind what could be changed in the design and how the selectors have to be structured so that any changes can be tested with as little effort as possible.
+
+The most important point here is certainly that you don't always search the whole DOM, but identify it cascadingly through the elements.
+
+First you identify the organism "form", then within the form the molecule "first name" and then via the atom "TextInput" the corresponding atom within the molecule.  So the composition of the page can be changed later - the tests will continue to work.
+
+==**In a well built framework the selectors are only needed inside the atoms.**==
+
+#### Name
+
+Finds the element using the name. 
+
+```c#
+Driver.FindElement(By.Name("firstname"));
+```
 
 #### ClassName
 
+Finds the element using the ClassName. Should only be used within organisms, because a class name is rarely unique within the whole DOM. Attention, a change in the design can have an impact to the test.
+
+```c#
+Driver.FindElement(By.ClassName("m-rich-text"));
+```
+
 #### TagName
+
+If you search a specific unique element inside a molecule you can use this selector. It should be noted, however, that if a 2nd identical element suddenly enters the same atom, e.g. an image or a link, the selector will no longer work as expected.
+
+```c#
+Driver.FindElement(By.TagName("span"));
+```
 
 #### Id
 
-#### CssSelector
+The clearest selector. Within the DOM, an ID must be unique, so this selector always finds the correct element. 
 
-#### xPath
+It is recommended that at least every organism has a unique ID.
+
+```c#
+Driver.FindElement(By.Id("contact_form"));
+```
 
 #### LinkText
 
+Find the link element with matching visible text. Attention: The link text must be completely identical! This also means that as soon as even a part of the link text changes, this selector will no longer work.
+
+```c#
+Driver.FindElement(By.LinkText("Next"));
+```
+
 #### PartialLinkText
 
-#### Trick shots
+Find the link element with partial matching visible text. This selector still works if the link text changes marginally as long as the searched term continues to occur.
 
-### Methods
+```c#
+Driver.FindElement(By.PartialLinkText("Step"));
+```
 
-#### Click
+#### CssSelector
 
-#### SendKeys
+This is a very powerful selector and works on the principle of jQuery. Not all pseudo classes are supported, but most work.
 
-#### Clear
+To test the CSS selectors the Chrome extension [Selector Gadget](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb) is very helpful.
 
-#### Cookies
+```c#
+Driver.FindElement(By.CssSelector(".g-lg-span-6:nth-child(1)"));
+```
 
-#### Navigate
+#### xPath
 
-#### Actions
+Also a very powerful selector, but also one with high danger potential. xPath searches through the DOM with path instructions and a beginner error is to always describe the path from the root.
 
-#### Thread.Sleep
+With the smallest position shift of an element, such a selector will no longer work!
+
+Therefore, it is very important to think in Atomic Design and build the path.
+
+```c#
+Driver = FindElement(By.XPath(".//*[@data-test-id='" + Id + "']"));
+```
+
+#### Best practice
+
+##### Think atomic
+
+This applies to both development and testing. This is the only way to gain the flexibility not to have to rewrite all tests when changing the UI.
+
+```html
+<form id="contactform">
+    <input name="firstname" />
+    <input name="password" />
+</form>
+<form id="loginform">
+    <input name="username" />
+    <input name="password" />
+</form>
+```
+
+```c#
+// molecule "contactform"
+_parent = Driver.FindElement(By.Id("contact_form"));
+_password = _parent.FindElement(By.Name("password");
+// molecule "loginform"
+_parent = Driver.FindElement(By.Id("login_form"));
+_password = _parent.FindElement(By.Name("password");
+
+```
+
+With this strategy, for example, the forms can be placed anywhere within the UI and several forms can be present simultaneously in the same UI -- the "password" molecule will always be uniquely identifiable via the _parent.
+
+##### Use the right selectors to stay flexible
+
+For each selector, think about what influence a possible change in the UI will have on it.
+
+A link text is often changed -- i.e. the LinkText selector will no longer work, the PartialLinkText will.
+
+Class names are also very dangerous. Especially selectors on class names of known frameworks like Bootstrap. If this is changed, ALL these selectors will not work anymore. If at all, pseudo classes should be used. But what happens if CSS classes suddenly have the same name as your pseudo classes?
+
+What happens if the designer suddenly has the idea to display the error message with a DIV instead of a SPAN? Your TagName selector will stop working at the same moment! Better give the container of the error message a pseudotag like data-test-type="errormsg" and then use an xPath selector. So you stay flexible.
+
+##### Use the right way
+
+A little personal tip -- work from the atoms towards the organism and not vice versa.
 
 ### Properties
 
+Once the element has been identified, the various properties can now be accessed. 
+
+As an example we extend the step `[Then(@"I see all my tabs")]` in the step file *GherkinSample.feature.steps.cs* and we use a selector that we should NEVER use in practice.
+
+```c#
+IWebElement PhoneNumber = Hooks.Driver.FindElement(By.CssSelector(".shop-phone"));
+```
+
+Now we can access the properties of this element.
+
 #### Text
+
+Returns the text of the element, in this example the text with the phone number. 
+
+```c#
+string Label = PhoneNumber.Text;
+```
 
 #### Location
 
+Gets a System.Drawing.Point object containing the coordinates of the upper-left corner of this element relative to the upper-left corner of the page.
+
+```c#
+int Left = PhoneNumber.Location.X;
+int Top = PhoneNumber.Location.Y;
+```
+
 #### Size
+
+Gets the height and width  of this element in pixel;
+
+```c#
+int Top = PhoneNumber.Location.Y;
+int Width = PhoneNumber.Size.Width;
+```
 
 #### GetCssValue
 
+Get the specific CSS value of this element.
+
+```c#
+string VAlign = PhoneNumber.GetCssValue("vertical-align");
+```
+
 #### Enabled
+
+This property must not be confused with Displayed. Enabled returns whether a form element can be used or not. EVERY element returns true, except form elements that are explicitly set to disabled.
+
+```c#
+bool Enabled = PhoneNumber.Enabled;
+```
 
 #### Displayed
 
+Gets a value indicating whether or not this element is displayed.
+
+```c#
+bool Displayed = PhoneNumber.Displayed;
+```
+
 #### GetAttribute
+
+Gets the value of the specified attribute for this element. The attribute's current value. Returns a null if the value is not set.
+
+```c#
+string ClassName = PhoneNumber.GetAttribute("class");
+```
+
+#### TagName
+
+Gets the tag name of this element.
+
+```c#
+string TagName = PhoneNumber.TagName;
+```
+
+### Methods
+
+Now it is not the idea only to query values but also to execute actions. Therefore Selenium also offers methods for the elements.
+
+#### Thread.Sleep()
+
+To begin with, a method that does not come from selenium but from C# -- but is very often needed.
+
+For animations, for example, you have to wait some time to validate properties until the animation is finished.
+
+
+
+#### Click()
+
+#### SendKeys()
+
+#### Clear()
+
+#### Actions
+
+#### 
