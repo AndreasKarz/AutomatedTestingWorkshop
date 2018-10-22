@@ -28,8 +28,8 @@ namespace AutomatedTestingWorkshop.GherkinSpecs
         {
             _searchResultPage = new SearchResultPage();
             string results = _searchResultPage.SearchResults.Header.CounterText.Text;
-            string Matches = _searchResultPage.SearchResults.Header.CounterMatches;
-            var y = 2;
+            int Matches = int.Parse(_searchResultPage.SearchResults.Header.CounterMatches);
+            Assert.Equal(Results, Matches);
         }
 
         [Given(@"I have click on the Tab WOMEN")]
