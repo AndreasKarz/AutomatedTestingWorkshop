@@ -783,19 +783,43 @@ string TagName = PhoneNumber.TagName;
 
 Now it is not the idea only to query values but also to execute actions. Therefore Selenium also offers methods for the elements.
 
+#### SendKeys()
+
+Sends a text or control character to an input field. 
+
+```c#
+Searchbox.SendKeys("Shoe");
+```
+
+#### Clear()
+
+Clears the content of this input element.
+
+```c#
+Searchbox.Clear();
+```
+
+#### Submit()
+
+If this current element is a form, or an element within a form, then this will be submitted to the web server. If this causes the current page to change, then this method will block until the new page is loaded.
+
+```c#
+Searchbox.Submit();
+```
+
 #### Thread.Sleep()
 
-To begin with, a method that does not come from selenium but from C# -- but is very often needed.
+A method that does not come from selenium but from C# -- but is very often needed.
 
-For animations, for example, you have to wait some time to validate properties until the animation is finished.
+For animations, for example, you have to wait some time to validate properties until the animation is finished. Or after a submit to wait to the new content.
 
-
+```c#
+Thread.Sleep(1000);
+```
 
 #### Click()
 
-#### SendKeys()
 
-#### Clear()
 
 #### Actions
 
