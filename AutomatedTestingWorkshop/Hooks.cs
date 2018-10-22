@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics;
 using TechTalk.SpecFlow;
 
-namespace AutomatedTestingWorkshop
+namespace Framework
 {
     [Binding]
     public sealed class Hooks

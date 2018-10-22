@@ -15,6 +15,7 @@ namespace AutomatedTestingWorkshop.GherkinSpecs
         [Then(@"The dummy assertion works")]
         public void DummyAssertionWorks()
         {
+
             Assert.Equal(1, 1);
         }
     }

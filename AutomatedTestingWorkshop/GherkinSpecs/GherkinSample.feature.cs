@@ -120,8 +120,10 @@ this.ScenarioInitialize(scenarioInfo);
 #line 9
 this.FeatureBackground();
 #line 20
- testRunner.When(string.Format("I search for {0}", therm), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+  testRunner.And("Im on the Homepage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 21
+ testRunner.When(string.Format("I search for {0}", therm), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 22
  testRunner.Then(string.Format("I will recieve {0} results", count), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -133,7 +135,7 @@ this.FeatureBackground();
         public virtual void CheckTheTabs()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check the tabs", null, ((string[])(null)));
-#line 27
+#line 28
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 9
@@ -151,7 +153,10 @@ this.FeatureBackground();
             table1.AddRow(new string[] {
                         "3",
                         "T-SHIRTS"});
-#line 29
+            table1.AddRow(new string[] {
+                        "4",
+                        "Belts"});
+#line 30
  testRunner.Then("I see all my tabs", ((string)(null)), table1, "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -167,7 +172,7 @@ this.FeatureBackground();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Test only for Firefox", null, new string[] {
                         "browser",
                         "Firefox"});
-#line 36
+#line 38
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 9
@@ -186,7 +191,7 @@ this.FeatureBackground();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Test only for Internet Explorer", null, new string[] {
                         "browser",
                         "IE"});
-#line 40
+#line 42
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 9
@@ -205,7 +210,7 @@ this.FeatureBackground();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Test only for Edge", null, new string[] {
                         "browser",
                         "Edge"});
-#line 44
+#line 46
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 9
@@ -224,7 +229,7 @@ this.FeatureBackground();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Test only for Chrome", null, new string[] {
                         "browser",
                         "Chrome"});
-#line 48
+#line 50
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 9

@@ -1,6 +1,5 @@
-﻿using OpenQA.Selenium;
-using System.Threading;
-using TechTalk.SpecFlow;
+﻿using TechTalk.SpecFlow;
+using Framework.Selenium.Pages;
 using Xunit;
 
 namespace AutomatedTestingWorkshop.GherkinSpecs
@@ -8,6 +7,31 @@ namespace AutomatedTestingWorkshop.GherkinSpecs
     [Binding]
     public sealed class GherkinSample
     {
+        private Homepage _homepage;
+        private SearchResultPage _searchResultPage;
+
+        [Given(@"Im on the Homepage")]
+        public void GivenImOnTheHomepage()
+        {
+            _homepage = new Homepage();
+        }
+
+        [When(@"I search for (.*)")]
+        public void WhenISearchForShoe(string Therm)
+        {
+            _homepage.Header.Search.Input.SendKeys(Therm);
+            _homepage.Header.Search.Button.Click();
+        }
+
+        [Then(@"I will recieve (.*) results")]
+        public void ThenIWillRecieveResults(int Results)
+        {
+            _searchResultPage = new SearchResultPage();
+            string results = _searchResultPage.SearchResults.Header.CounterText.Text;
+            string Matches = _searchResultPage.SearchResults.Header.CounterMatches;
+            var y = 2;
+        }
+
         [Given(@"I have click on the Tab WOMEN")]
         public void GivenIHaveClickOnTheTabWOMEN()
         {
@@ -26,47 +50,38 @@ namespace AutomatedTestingWorkshop.GherkinSpecs
             
         }
 
-        [When(@"I search for (.*)")]
-        public void WhenISearchForShoe(string Therm)
-        {
-            
-        }
-
-        [Then(@"I will recieve (.*) results")]
-        public void ThenIWillRecieveResults(int Results)
-        {
-            
-        }
-
         [Then(@"I see all my tabs")]
         public void ThenISeeAllMyTabs(Table table)
         {
-            // samples for properties
-            IWebElement PhoneNumber = Hooks.Driver.FindElement(By.CssSelector(".shop-phone"));
-            string Label = PhoneNumber.Text;
-            int Left = PhoneNumber.Location.X;
-            int Top = PhoneNumber.Location.Y;
-            int Width = PhoneNumber.Size.Width;
-            string VAlign = PhoneNumber.GetCssValue("vertical-align");
-            bool Enabled = PhoneNumber.Enabled;
-            bool Displayed = PhoneNumber.Displayed;
-            string ClassName = PhoneNumber.GetAttribute("class");
-            string TagName = PhoneNumber.TagName;
+            //// samples for properties
+            //IWebElement PhoneNumber = Hooks.Driver.FindElement(By.CssSelector(".shop-phone"));
+            //string Label = PhoneNumber.Text;
+            //int Left = PhoneNumber.Location.X;
+            //int Top = PhoneNumber.Location.Y;
+            //int Width = PhoneNumber.Size.Width;
+            //string VAlign = PhoneNumber.GetCssValue("vertical-align");
+            //bool Enabled = PhoneNumber.Enabled;
+            //bool Displayed = PhoneNumber.Displayed;
+            //string ClassName = PhoneNumber.GetAttribute("class");
+            //string TagName = PhoneNumber.TagName;
 
-            //samples for methods
-            IWebElement Searchbox = Hooks.Driver.FindElement(By.Id("search_query_top"));
-            Searchbox.SendKeys("Top");
-            Thread.Sleep(1000);
-            Searchbox.Clear();
-            Thread.Sleep(1000);
-            Searchbox.SendKeys("Shoe");
-            Searchbox.Submit();
-            Thread.Sleep(1000);
-            IWebElement DemoProduct = Hooks.Driver.FindElement(By.XPath("//a[contains(@href, 'id_product=2')]"));
-            DemoProduct.Click();
-            Thread.Sleep(5000);
+            ////samples for methods
+            //IWebElement Searchbox = Hooks.Driver.FindElement(By.Id("search_query_top"));
+            //Searchbox.SendKeys("Top");
+            //Thread.Sleep(1000);
+            //Searchbox.Clear();
+            //Thread.Sleep(1000);
+            //Searchbox.SendKeys("Shoe");
+            //Searchbox.Submit();
 
-            var x = 1;
+            //Thread.Sleep(1000);
+
+
+            //IWebElement DemoProduct = Hooks.Driver.FindElement(By.XPath("//a[contains(@href, 'id_product=2')]"));
+            //DemoProduct.Click();
+            //Thread.Sleep(5000);
+
+            //var x = 1;
         }
 
 

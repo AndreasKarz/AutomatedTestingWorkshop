@@ -495,8 +495,8 @@ When searching for a single element, the driver should poll the page until the e
 In our example, this is defined in the hooks in the _initDriver method. 
 
 ```c#
-Wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver, TimeSpan.FromSeconds(30));
-Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+Wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver, TimeSpan.FromSeconds(10));
+Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 ```
 
 #### Options/Capabilities
@@ -655,7 +655,7 @@ With the smallest position shift of an element, such a selector will no longer w
 Therefore, it is very important to think in Atomic Design and build the path.
 
 ```c#
-Driver = FindElement(By.XPath(".//*[@data-test-id='" + Id + "']"));
+Driver.FindElement(By.XPath(".//*[@data-test-id='" + Id + "']"));
 ```
 
 #### Best practice
@@ -735,7 +735,7 @@ int Top = PhoneNumber.Location.Y;
 Gets the height and width  of this element in pixel;
 
 ```c#
-int Top = PhoneNumber.Location.Y;
+int Height = PhoneNumber.Size.Height;
 int Width = PhoneNumber.Size.Width;
 ```
 
@@ -819,8 +819,179 @@ Thread.Sleep(1000);
 
 #### Click()
 
+Simulate a click on this element.
+
+```c#
+DemoProduct.Click();
+```
+
+# Compose the framework
+
+Now we can start building our framework. Here we have to remember the Atomic design all the time. In this example we focus on the search.
+
+## The atoms
+
+First we need 2 atoms input type="text" and the button with the icon. 
+
+### InputText
+
+For the DOM object `<input type="text">`  move the file /_CodeSnippets/InputText.txt to /Selenium/Atoms/InputText.cs and then open it in the editor.
+
+The atom has a constructor that searches within the parent (molecule) for a HTML input of type text.
+
+Now we have to consider which properties and methods we will need for this atom. Always think about the future, what might come. The DefaultProps come from the class SwissLife.Selenium.IWebElement.DefaultProps, so you only have to define what is needed additionally.
+
+For atoms it is very important to always document in the code. This simplifies cooperation enormously later on.
+
+### Button
+
+move the file /_CodeSnippets/Button.txt to /Selenium/Atoms/Button.cs and then open it in the editor.
+
+After the constructor, we need only the methode Click() and the Icon to validate the right icon.
+
+## The molecule
+
+No we can compose the search box as molecule. Create the class SearchBox.cs inside /Selenium/Molecules with the code below.
+
+```c#
+using OpenQA.Selenium;
+using Framework.Selenium.Atoms;
+
+namespace Framework.Selenium.Molecules
+{
+    public class SearchBox
+    {
+        private IWebElement _component;
+        public InputText Input;
+        public Button Button;
+
+        public SearchBox(IWebElement Parent, By by)
+        {
+            _component = Hooks.Driver.FindElement(by);
+            Input = new InputText(_component);
+            Button = new Button(_component);
+        }
+    }
+}
+
+```
+
+You see, the more we work our way up, the less code we need. It's more and more just a composing.
+
+## The organism
+
+The first organism in our example is the header row with the logo. In our example, only the search box is filled with the logo, you can expand the organism later.
+
+Create the class HeaderRow.cs inside /Selenium/Organisms with the code below.
+
+```c#
+using OpenQA.Selenium;
+using Framework.Selenium.Molecules;
+
+namespace Framework.Selenium.Organisms
+{
+    public class HeaderRow
+    {
+        private IWebElement _component;
+        public SearchBox Search;
+
+        public HeaderRow(IWebElement Parent, By by)
+        {
+            _component = Hooks.Driver.FindElement(by);
+            Search = new SearchBox(_component, By.Id("searchbox"));
+        }
+    }
+}
+
+```
+
+A little less code. Pay attention to the namespacing: It's structured in a way that you can't directly access the molecules or atoms.
+
+In this example we select the molecule with the ID. If the molecule had no ID, we could have instantiated it using the tagName form.
+
+## The page
+
+Now we can build the page object. Create the class Homepage.cs inside /Selenium/Pages with the code below.
+
+```c#
+using OpenQA.Selenium;
+using Framework.Selenium.Organisms;
+
+namespace Framework.Selenium.Pages
+{
+    public class Homepage
+    {
+        private IWebElement _component;
+        public HeaderRow Header;
+
+        public Homepage()
+        {
+            _component = Hooks.Driver.FindElement(By.TagName("body"));
+            Header = new HeaderRow(_component, By.CssSelector("#header div:nth-of-type(3) .container .row"));
+        }
+    }
+}
+```
+
+The selector for the organism is a little bit tricky. In practice, this element should have a unique ID.
+
+## Use the element
+
+If we have done everything right, we can use the page object in the step file and build the tests accordingly.
+
+Extend the scenario Test the search function with a new And after the Given comment
+
+```Gher
+And Im on the Homepage
+```
+
+Copy the step code with F12 an copy it into the step file. Extend the using section and add a private property _homepage. 
+
+Then instantiate the homepage in the new Given.
+
+```c#
+using TechTalk.SpecFlow;
+using Framework.Selenium.Pages;
+using Xunit;
+
+namespace AutomatedTestingWorkshop.GherkinSpecs
+{
+    [Binding]
+    public sealed class GherkinSample
+    {
+        private Homepage _homepage;
+
+        [Given(@"Im on the Homepage")]
+        public void GivenImOnTheHomepage()
+        {
+            _homepage = new Homepage();
+        }
+...
+
+```
+
+Then you can extend the step I search for...
+
+```c#
+        [When(@"I search for (.*)")]
+        public void WhenISearchForShoe(string Therm)
+        {
+            _homepage.Header.Search.Input.SendKeys(Therm);
+            _homepage.Header.Search.Button.Click();
+        }
+```
+
+Do you realize how quickly we can write tests when atoms and molecules exist?
+
+## Next step
+
+Examine the test results page. For the current example we need a new atom span, a new molecule counter, a new organism SearchResultHeader and a new page SearchResults.
+
+In which scenario step do you have to initialize Page SearchResults?
+
+What else do you have to do to validate the number of hits?
 
 
-#### Actions
 
-#### 
+
+

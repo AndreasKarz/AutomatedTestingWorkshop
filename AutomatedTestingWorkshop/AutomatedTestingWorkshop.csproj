@@ -98,6 +98,15 @@
     <Compile Include="GherkinSpecs\GherkinSample.feature.steps.cs" />
     <Compile Include="Hooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Selenium\Atoms\Span.cs" />
+    <Compile Include="Selenium\Atoms\Button.cs" />
+    <Compile Include="Selenium\Atoms\InputText.cs" />
+    <Compile Include="Selenium\Molecules\SearchBox.cs" />
+    <Compile Include="Selenium\Organisms\SearchResults.cs" />
+    <Compile Include="Selenium\Molecules\SearchResultHeader.cs" />
+    <Compile Include="Selenium\Organisms\HeaderRow.cs" />
+    <Compile Include="Selenium\Pages\SearchResultPage.cs" />
+    <Compile Include="Selenium\Pages\Homepage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -113,9 +122,6 @@
     <None Include="xunit.runner.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Selenium\Atoms\" />
-    <Folder Include="Selenium\Molecules\" />
-    <Folder Include="Selenium\Pages\" />
     <Folder Include="_CodeSnippets\" />
   </ItemGroup>
   <ItemGroup>

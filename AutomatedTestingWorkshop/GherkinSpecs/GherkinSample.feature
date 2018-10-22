@@ -17,6 +17,7 @@ Scenario: Show tops for women
 
 Scenario Outline: Test the search function
 	# Given is set by background
+		And Im on the Homepage
 	When I search for <therm>
 	Then I will recieve <count> results
 	Examples: 
@@ -31,6 +32,7 @@ Scenario: Check the tabs
     | 1   | WOMEN    |
     | 2   | DRESSES  |
     | 3   | T-SHIRTS |
+    | 4   | Belts    |
 
 @browser @Firefox 
 Scenario: Test only for Firefox
