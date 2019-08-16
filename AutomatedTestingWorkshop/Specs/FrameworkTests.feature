@@ -8,5 +8,6 @@
 
 Scenario: All packages correctly installed
 	Given I open the test page
-	When I do nothing
-	Then The dummy assertion works
+		And I change the language to DE
+	When I confirm the disclaimer
+	Then The homepage has the title 'Private | Swiss Life'

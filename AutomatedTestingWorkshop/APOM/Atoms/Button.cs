@@ -1,5 +1,7 @@
 ﻿using OpenQA.Selenium;
-using SwissLife.Selenium.IWebElement.DefaultProps;
+using FunkyBDD.SxS.Selenium.WebElement;
+using FunkyBDD.SxS.Selenium.WebDriver;
+using FunkyBDD.SxS.Selenium.APOM;
 
 namespace Framework.Selenium.Atoms
 {
@@ -12,18 +14,20 @@ namespace Framework.Selenium.Atoms
         /// <param name="Parent">Reference to the parent component within which you want to search</param>
         public Button(IWebElement Parent)
         {
-            _component = Parent.FindElement(By.TagName("button"));
+            Component = Parent.FindElement(By.TagName("button"));
+            var driver = Component.GetDriver();
+            driver.SetSeleniumFlag();
         }
 
         /// <summary>
         ///     Init a click on the button
         /// </summary>
-        public void Click() => _component.Click();
+        public void Click() => Component.Click();
 
         /// <summary>
         ///     Get the icon of the button
         /// </summary>
-        public string Icon => _component.Text;
+        public string Icon => Component.Text;
 
     }
 }
