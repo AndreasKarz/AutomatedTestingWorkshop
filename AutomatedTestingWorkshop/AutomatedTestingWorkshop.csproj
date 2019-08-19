@@ -149,6 +149,7 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Search.feature.cs</LastGenOutput>
     </None>
+    <None Include="TechTalk.SpecFlow.VisualStudioIntegration.vsix" />
     <None Include="xunit.runner.json" />
   </ItemGroup>
   <ItemGroup />
