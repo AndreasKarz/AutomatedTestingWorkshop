@@ -1,17 +1,18 @@
-﻿using OpenQA.Selenium;
-using Framework.Selenium.Organisms;
+﻿using FunkyBDD.SxS.Framework.APOM.Organisms;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
-namespace Framework.Selenium.Pages
+namespace FunkyBDD.SxS.Framework.Selenium.Pages
 {
-    public class SearchResultPage
+    public class SearchResultPage : Basepage
     {
-        private IWebElement _component;
-        public SearchResults SearchResults;
-
-        public SearchResultPage()
+        public SearchResults Results;
+        public SearchResultPage(IWebDriver driver) : base(driver)
         {
-            _component = Hooks.Driver.FindElement(By.TagName("body"));
-            SearchResults = new SearchResults(_component, By.Id("center_column"));
+            Component = Wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[data-analytics-search='search']")));
+            Results = new SearchResults(Component);
         }
+
+        public int ResultCount => int.Parse(Component.FindElement(By.CssSelector("[data-result-count]")).GetAttribute("data-result-count"));
     }
 }

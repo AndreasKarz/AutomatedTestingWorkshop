@@ -1,13 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Collections.ObjectModel;
-using TechTalk.SpecFlow;
-using OpenQA.Selenium;
+﻿using FunkyBDD.SxS.Selenium.Browserstack;
 using FunkyBDD.SxS.Selenium.WebDriver;
 using FunkyBDD.SxS.Selenium.WebElement;
-using FunkyBDD.SxS.Selenium.Browserstack;
+using OpenQA.Selenium;
+using SwissLife.SxS.Helpers;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using TechTalk.SpecFlow;
 
-namespace Framework
+namespace FunkyBDD.SxS.Framework
 {
     [Binding]
     public sealed class Hooks
@@ -16,19 +17,21 @@ namespace Framework
         public static Browser Browser;
         private static string _testURL;
 
-
         [BeforeFeature]
         public static void BeforeFeature()
         {
-            if (Environment.GetEnvironmentVariable("TEST_BROWSER") == null)
-            {
-                Browser = new Browser("FirefoxLocal");
+            if (!FeatureContext.Current.FeatureInfo.Tags.Contains("API"))
+            { 
+                if (Environment.GetEnvironmentVariable("TEST_BROWSER") == null)
+                {
+                    Browser = new Browser("FirefoxLocal");
+                }
+                else
+                {
+                    Browser = new Browser(Environment.GetEnvironmentVariable("TEST_BROWSER"));
+                }
+                    Driver = Browser.Driver;
             }
-            else
-            {
-                Browser = new Browser(Environment.GetEnvironmentVariable("TEST_BROWSER"));
-            }
-            Driver = Browser.Driver;
         }
 
         [Given(@"I open the test page")]
@@ -74,15 +77,21 @@ namespace Framework
         [AfterScenario]
         public void AfterScenarion()
         {
-            var screenShotFileName = $"{FeatureContext.Current.FeatureInfo.Title}__{ScenarioContext.Current.ScenarioInfo.Title}.png";
-            //screenShotFileName = FileHelpers.RemoveIllegalFileNameChars(screenShotFileName);
-            Driver.MakeScreenshot(screenShotFileName);
+            if(Driver != null) 
+            { 
+                var screenShotFileName = $"{FeatureContext.Current.FeatureInfo.Title}__{ScenarioContext.Current.ScenarioInfo.Title}.png";
+                screenShotFileName = FileHelpers.RemoveIllegalFileNameChars(screenShotFileName);
+                Driver.MakeScreenshot(screenShotFileName);
+            }
         }
 
         [AfterFeature]
         public static void AfterFeature()
         {
-            Browser.DisposeDriver();
+            if(Browser != null)
+            { 
+                Browser.DisposeDriver();
+            }
         }
 
     }

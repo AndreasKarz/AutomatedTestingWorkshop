@@ -10,8 +10,8 @@
     <ProjectGuid>{6C2249FE-861C-476F-BA43-1501C8CC63E2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AutomatedTestingWorkshop</RootNamespace>
-    <AssemblyName>AutomatedTestingWorkshop</AssemblyName>
+    <RootNamespace>FunkyBDD.SxS.Framework</RootNamespace>
+    <AssemblyName>FunkyBDD.SxS.Framework</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -37,6 +37,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FunkyBDD.SxS.Helpers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FunkyBDD.SxS.Helpers.1.0.0\lib\net461\FunkyBDD.SxS.Helpers.dll</HintPath>
+    </Reference>
     <Reference Include="FunkyBDD.SxS.Selenium.APOM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FunkyBDD.SxS.Selenium.APOM.1.0.0\lib\netstandard2.0\FunkyBDD.SxS.Selenium.APOM.dll</HintPath>
     </Reference>
@@ -100,7 +103,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API.cs" />
+    <Compile Include="APOM\Atoms\Header.cs" />
+    <Compile Include="APOM\Molecules\SearchResult.cs" />
+    <Compile Include="APOM\Molecules\Teaser.cs" />
+    <Compile Include="APOM\Organisms\SearchResults.cs" />
     <Compile Include="APOM\Pages\Basepage.cs" />
+    <Compile Include="APOM\Pages\DetailPage.cs" />
+    <Compile Include="APOM\Pages\SearchResultPage.cs" />
+    <Compile Include="Specs\API.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>API.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Specs\API.feature.steps.cs" />
     <Compile Include="Specs\FrameworkTests.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -109,23 +125,30 @@
     <Compile Include="Specs\FrameworkTests.feature.steps.cs" />
     <Compile Include="Hooks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="APOM\Atoms\Span.cs" />
-    <Compile Include="APOM\Atoms\Button.cs" />
-    <Compile Include="APOM\Atoms\InputText.cs" />
-    <Compile Include="APOM\Molecules\SearchBox.cs" />
-    <Compile Include="APOM\Organisms\SearchResults.cs" />
-    <Compile Include="APOM\Molecules\SearchResultHeader.cs" />
-    <Compile Include="APOM\Organisms\HeaderRow.cs" />
-    <Compile Include="APOM\Pages\SearchResultPage.cs" />
+    <Compile Include="APOM\Organisms\Banner.cs" />
     <Compile Include="APOM\Pages\Homepage.cs" />
+    <Compile Include="Specs\Search.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Search.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Specs\Search.feature.steps.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Specs\API.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>API.feature.cs</LastGenOutput>
+    </None>
     <None Include="Specs\FrameworkTests.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>FrameworkTests.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="Specs\Search.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Search.feature.cs</LastGenOutput>
+    </None>
     <None Include="xunit.runner.json" />
   </ItemGroup>
   <ItemGroup />

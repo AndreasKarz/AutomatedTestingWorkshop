@@ -1,17 +1,29 @@
-﻿using OpenQA.Selenium;
-using Framework.Selenium.Molecules;
+﻿using FunkyBDD.SxS.Framework.APOM.Molecules;
+using FunkyBDD.SxS.Selenium.APOM;
+using FunkyBDD.SxS.Selenium.WebElement;
+using OpenQA.Selenium;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Framework.Selenium.Organisms
+namespace FunkyBDD.SxS.Framework.APOM.Organisms
 {
-    public class SearchResults
+    public class SearchResults: DefaultProps
     {
-        private IWebElement _component;
-        public SearchResultHeader Header;
+        private readonly List<SearchResult> searchResults = new List<SearchResult>();
 
-        public SearchResults(IWebElement Parent, By by)
+        public SearchResults(IWebElement parent)
+        { 
+            var list = parent.FindElementsOrDefault(By.CssSelector(".o-search-result__list > li"));
+            searchResults.AddRange(from el in list
+                                   let result = new SearchResult(el)
+                                   select result);
+        }
+
+        public void SelectResult(int index)
         {
-            _component = Hooks.Driver.FindElement(by);
-            Header = new SearchResultHeader(_component, By.ClassName("page-heading"));
+            var result = searchResults[index].Component;
+            result.ScrollTo();
+            result.FindElement(By.TagName("a")).Click();
         }
     }
 }

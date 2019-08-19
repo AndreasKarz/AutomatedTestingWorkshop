@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace AutomatedTestingWorkshop.Specs
+namespace FunkyBDD.SxS.Framework.Specs
 {
     using TechTalk.SpecFlow;
     
@@ -72,28 +72,103 @@ namespace AutomatedTestingWorkshop.Specs
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 9
+#line 10
+ testRunner.Given("I open the test page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+        }
+        
         void System.IDisposable.Dispose()
         {
             this.ScenarioTearDown();
         }
         
-        [Xunit.FactAttribute(DisplayName="All packages correctly installed")]
+        [Xunit.FactAttribute(DisplayName="All packages correctly installed | Check the helpers")]
         [Xunit.TraitAttribute("FeatureTitle", "The base framework works well")]
-        [Xunit.TraitAttribute("Description", "All packages correctly installed")]
-        public virtual void AllPackagesCorrectlyInstalled()
+        [Xunit.TraitAttribute("Description", "All packages correctly installed | Check the helpers")]
+        public virtual void AllPackagesCorrectlyInstalledCheckTheHelpers()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("All packages correctly installed", null, ((string[])(null)));
-#line 9
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("All packages correctly installed | Check the helpers", null, ((string[])(null)));
+#line 12
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 10
- testRunner.Given("I open the test page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 11
-  testRunner.And("I change the language to DE", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 12
- testRunner.When("I confirm the disclaimer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 9
+this.FeatureBackground();
 #line 13
+ testRunner.Given("I change the language to DE", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 14
+ testRunner.When("I confirm the disclaimer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 15
  testRunner.Then("The homepage has the title \'Private | Swiss Life\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 16
+  testRunner.And("The page has the color 255, 53, 53, 53", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.TheoryAttribute(DisplayName="Check the titel translation")]
+        [Xunit.TraitAttribute("FeatureTitle", "The base framework works well")]
+        [Xunit.TraitAttribute("Description", "Check the titel translation")]
+        [Xunit.InlineDataAttribute("DE", "Die passende Vorsorge für jede Lebensphase", "Vorsorge für Familien", "Berufliche Vorsorge", new string[0])]
+        [Xunit.InlineDataAttribute("EN", "The right provision for each stage of life", "Future provisions for families", "Occupational provisions", new string[0])]
+        [Xunit.InlineDataAttribute("FR", "La prévoyance adaptée à chaque phase de la vie", "La prévoyance pour les familles", "Prévoyance professionnelle", new string[0])]
+        [Xunit.InlineDataAttribute("IT", "La previdenza giusta per ogni fase della vita", "Previdenza per la famiglia", "Previdenza professionale", new string[0])]
+        public virtual void CheckTheTitelTranslation(string lang, string title, string familyTeaserTitle, string occupationalTeaserTitle, string[] exampleTags)
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check the titel translation", null, exampleTags);
+#line 18
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line 19
+ testRunner.When(string.Format("I change the language to {0}", lang), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 20
+ testRunner.Then(string.Format("The banner title should be \'{0}\'", title), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 21
+  testRunner.And(string.Format("The family teaser title schould be \'{0}\'", familyTeaserTitle), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 22
+  testRunner.And(string.Format("The occupational teaser title schould be \'{0}\'", occupationalTeaserTitle), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.FactAttribute(DisplayName="Check mouse over button")]
+        [Xunit.TraitAttribute("FeatureTitle", "The base framework works well")]
+        [Xunit.TraitAttribute("Description", "Check mouse over button")]
+        public virtual void CheckMouseOverButton()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Check mouse over button", null, ((string[])(null)));
+#line 30
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line 31
+ testRunner.When("I mover over the family teaser", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 32
+ testRunner.Then("The button should be shown", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.FactAttribute(DisplayName="Page 404 works")]
+        [Xunit.TraitAttribute("FeatureTitle", "The base framework works well")]
+        [Xunit.TraitAttribute("Description", "Page 404 works")]
+        public virtual void Page404Works()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Page 404 works", null, ((string[])(null)));
+#line 34
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
+#line 9
+this.FeatureBackground();
+#line 35
+ testRunner.When("I call a page not exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 36
+ testRunner.Then("The homepage has the title \'404 | Swiss Life\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
