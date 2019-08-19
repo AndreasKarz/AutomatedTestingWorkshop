@@ -136,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="appsettings.browserstack.json" />
     <None Include="Specs\API.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>API.feature.cs</LastGenOutput>
