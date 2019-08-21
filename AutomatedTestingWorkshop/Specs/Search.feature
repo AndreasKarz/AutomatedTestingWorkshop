@@ -21,4 +21,4 @@ Scenario: Validate the search detail function
 	Given I change the language to DE
 	When I'm searching for 'Vorsorge' 
 		And I select the 3. result
-	Then The detail page should have the title 'Swiss Life 3a Start | Swiss Life'
+	Then The detail page should have the title ' | Swiss Life'

@@ -46,7 +46,7 @@ namespace FunkyBDD.SxS.Framework.Specs
         [Then(@"The detail page should have the title '(.*)'")]
         public void ThenTheDetailPageShouldHaveTheTitle(string pageTitle)
         {
-            Assert.Equal(pageTitle, Detailpage.Title);
+            Assert.Contains(pageTitle, Detailpage.Title);
         }
 
     }

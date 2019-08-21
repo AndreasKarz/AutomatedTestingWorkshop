@@ -30,7 +30,8 @@ namespace FunkyBDD.SxS.Framework
                 {
                     Browser = new Browser(Environment.GetEnvironmentVariable("TEST_BROWSER"));
                 }
-                    Driver = Browser.Driver;
+                Driver = Browser.Driver;
+                Driver.SetSeleniumFlag();
             }
         }
 

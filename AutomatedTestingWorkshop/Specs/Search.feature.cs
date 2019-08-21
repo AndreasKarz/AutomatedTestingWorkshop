@@ -130,7 +130,7 @@ this.FeatureBackground();
 #line 23
   testRunner.And("I select the 3. result", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 24
- testRunner.Then("The detail page should have the title \'Swiss Life 3a Start | Swiss Life\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("The detail page should have the title \' | Swiss Life\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
