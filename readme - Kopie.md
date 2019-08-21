@@ -31,43 +31,37 @@ On [GitHub](https://github.com/AndreasKarz/AutomatedTestingWorkshop) you will fi
 
 ### Visual Studio Extension
 
-As a first step the Specflow Extension for Visual Studio must be installed, if not already done. Please read the [original Specflow manual](https://specflow.org/getting-started/#InstallSetup). After that Visual Studio must be restarted and the automatic update of the extension must be deactivated immediately. `[Extensions]` ` [Manage Extensions]`
+As a first step the Specflow Extension for Visual Studio must be installed, if not already done. Please read the [original Specflow manual](https://specflow.org/getting-started/#InstallSetup). After that Visual Studio should be restarted.
 
-### The Nuget packages
+### New Visual Studio Project
 
-In the base solution, the following packages are installed:
+Since Specflow currently does not run correctly with .Net Core, the project type "Class Library (.NET Framework)" must be used in Visual Studio. 
 
-#### SpecFlow.xUnit 2.4.0
+Since xUnit is used as the test runner, the nUnit template must not be used. A simple class library is sufficient for our project.
 
-Test connector between Specflow and xUnit to run the tests in the testrunner. For all the possible configuration options please visit the [original documentation](https://specflow.org/documentation/Configuration/) of Specflow. **Use exactly this version, all others have little bugs or are not compatible**
+### InstallPackages
 
-#### xunit.runner.visualstudio
+Once the new project has been created, the following Nuget packages must be installed:
 
-Visual Studio test runner 
+#### ```Install-Package SpecFlow.xUnit```
 
-#### Selenium.Support & Selenium.Firefox.WebDriver
+Test connector between Specflow and xUnit to run the tests in the testrunner. For all the possible configuration options please visit the [original documentation](https://specflow.org/documentation/Configuration/) of Specflow.
 
-As default browser for development we use the Firefox.
+#### ```Install-Package xunit.runner.visualstudio```
 
-#### FunkyBDD.SxS.Helpers
+Visual Studio testrunner 
 
-...
+#### `Install-Package Selenium.Chrome.WebDriver`
 
-#### FunkyBDD.SxS.Selenium.APOM
+For the beginning of this workshop we work with the Chrome Browser. More browsers will follow later.
 
-...
+#### `Install-Package SwissLife.Selenium.Webdriver.Extensions`
 
-#### FunkyBDD.SxS.Selenium.Browserstack
+Extensions for the Selenium Webdriver with functionalities which are not (yet) implemented in the standard driver.
 
-...appsettings.browserstack.json
+#### `Install-Package SwissLife.Selenium.IWebElement.DefaultProps`
 
-#### FunkyBDD.SxS.Selenium.WebDriver
-
-...
-
-#### FunkyBDD.SxS.Selenium.WebElement
-
-...
+Extensions for the IWebElement to extend the atoms (will be explained later) with default default properties.
 
 ### Set the environment variables
 

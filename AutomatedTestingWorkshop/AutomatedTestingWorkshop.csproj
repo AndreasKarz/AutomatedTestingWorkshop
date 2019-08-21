@@ -46,8 +46,8 @@
     <Reference Include="FunkyBDD.SxS.Selenium.Browserstack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FunkyBDD.SxS.Selenium.Browserstack.1.0.0\lib\netstandard2.0\FunkyBDD.SxS.Selenium.Browserstack.dll</HintPath>
     </Reference>
-    <Reference Include="FunkyBDD.SxS.Selenium.IWebDriver, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FunkyBDD.SxS.Selenium.WebDriver.1.0.0\lib\netstandard2.0\FunkyBDD.SxS.Selenium.IWebDriver.dll</HintPath>
+    <Reference Include="FunkyBDD.SxS.Selenium.IWebDriver, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FunkyBDD.SxS.Selenium.WebDriver.1.0.1\lib\netstandard2.0\FunkyBDD.SxS.Selenium.IWebDriver.dll</HintPath>
     </Reference>
     <Reference Include="FunkyBDD.SxS.Selenium.WebElement, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FunkyBDD.SxS.Selenium.WebElement.2.0.0\lib\netstandard2.0\FunkyBDD.SxS.Selenium.WebElement.dll</HintPath>
