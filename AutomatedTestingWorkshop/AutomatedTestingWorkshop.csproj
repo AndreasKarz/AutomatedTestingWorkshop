@@ -99,8 +99,11 @@
   <ItemGroup>
     <Compile Include="API.cs" />
     <Compile Include="APOM\Atoms\Header.cs" />
+    <Compile Include="APOM\Atoms\LinkButton.cs" />
+    <Compile Include="APOM\Molecules\DistributionTeaserItem.cs" />
     <Compile Include="APOM\Molecules\SearchResult.cs" />
     <Compile Include="APOM\Molecules\Teaser.cs" />
+    <Compile Include="APOM\Organisms\DistributionTeaser.cs" />
     <Compile Include="APOM\Organisms\SearchResults.cs" />
     <Compile Include="APOM\Pages\Basepage.cs" />
     <Compile Include="APOM\Pages\DetailPage.cs" />
@@ -121,6 +124,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="APOM\Organisms\Banner.cs" />
     <Compile Include="APOM\Pages\Homepage.cs" />
+    <Compile Include="Specs\Homepage.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Homepage.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Specs\Homepage.feature.steps.cs" />
     <Compile Include="Specs\Search.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -140,6 +149,10 @@
       <LastGenOutput>FrameworkTests.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="Specs\Homepage.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Homepage.feature.cs</LastGenOutput>
+    </None>
     <None Include="Specs\Search.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Search.feature.cs</LastGenOutput>

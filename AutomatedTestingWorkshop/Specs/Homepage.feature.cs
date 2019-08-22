@@ -17,18 +17,19 @@ namespace FunkyBDD.SxS.Framework.Specs
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "2.4.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [Xunit.TraitAttribute("Category", "Search")]
-    public partial class WebsiteSearchFunctionFeature : Xunit.IClassFixture<WebsiteSearchFunctionFeature.FixtureData>, System.IDisposable
+    [Xunit.TraitAttribute("Category", "Business")]
+    [Xunit.TraitAttribute("Category", "Homepage")]
+    public partial class HomepageElementsFeature : Xunit.IClassFixture<HomepageElementsFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "Search.feature"
+#line 1 "Homepage.feature"
 #line hidden
         
-        public WebsiteSearchFunctionFeature(WebsiteSearchFunctionFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public HomepageElementsFeature(HomepageElementsFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -37,9 +38,10 @@ namespace FunkyBDD.SxS.Framework.Specs
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Website search function", "\tIn order to \r\n\t\tfind the expected information\r\n\tAs a \r\n\t\tcustomer\r\n\tI want to \r\n" +
-                    "\t\thave a well search expirience", ProgrammingLanguage.CSharp, new string[] {
-                        "Search"});
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Homepage elements", "\tIn order to \r\n\t\tfind the expected information\r\n\tAs a \r\n\t\tcustomer\r\n\tI want to \r\n" +
+                    "\t\tsee all relevant elements", ProgrammingLanguage.CSharp, new string[] {
+                        "Business",
+                        "Homepage"});
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -87,14 +89,14 @@ namespace FunkyBDD.SxS.Framework.Specs
             this.ScenarioTearDown();
         }
         
-        [Xunit.FactAttribute(DisplayName="Validate the search function")]
-        [Xunit.TraitAttribute("FeatureTitle", "Website search function")]
-        [Xunit.TraitAttribute("Description", "Validate the search function")]
-        [Xunit.TraitAttribute("Category", "english")]
-        public virtual void ValidateTheSearchFunction()
+        [Xunit.FactAttribute(DisplayName="All distribution teasers are visible")]
+        [Xunit.TraitAttribute("FeatureTitle", "Homepage elements")]
+        [Xunit.TraitAttribute("Description", "All distribution teasers are visible")]
+        [Xunit.TraitAttribute("Category", "distribution")]
+        public virtual void AllDistributionTeasersAreVisible()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Validate the search function", null, new string[] {
-                        "english"});
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("All distribution teasers are visible", null, new string[] {
+                        "distribution"});
 #line 14
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
@@ -102,35 +104,24 @@ this.ScenarioInitialize(scenarioInfo);
 this.FeatureBackground();
 #line 15
  testRunner.Given("I change the language to \'EN\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 16
- testRunner.When("I\'m searching for \'provision\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 17
- testRunner.Then("I expect more then 200 results", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.FactAttribute(DisplayName="Validate the search detail function")]
-        [Xunit.TraitAttribute("FeatureTitle", "Website search function")]
-        [Xunit.TraitAttribute("Description", "Validate the search detail function")]
-        [Xunit.TraitAttribute("Category", "german")]
-        public virtual void ValidateTheSearchDetailFunction()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Validate the search detail function", null, new string[] {
-                        "german"});
-#line 20
-this.ScenarioInitialize(scenarioInfo);
-            this.ScenarioStart();
-#line 10
-this.FeatureBackground();
-#line 21
- testRunner.Given("I change the language to \'DE\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 22
- testRunner.When("I\'m searching for \'Vorsorge\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 23
-  testRunner.And("I select the 3. result", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 24
- testRunner.Then("The detail page should have the title \' | Swiss Life\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "title",
+                        "subTitle"});
+            table1.AddRow(new string[] {
+                        "Future provisions and wealth accumulation",
+                        "To product selection"});
+            table1.AddRow(new string[] {
+                        "Property and asset insurance",
+                        "To product selection"});
+            table1.AddRow(new string[] {
+                        "Health insurance",
+                        "To product selection"});
+            table1.AddRow(new string[] {
+                        "Property financing and residential property",
+                        "To product selection"});
+#line 16
+ testRunner.Then("I see the following distribution teasers", ((string)(null)), table1, "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -142,12 +133,12 @@ this.FeatureBackground();
             
             public FixtureData()
             {
-                WebsiteSearchFunctionFeature.FeatureSetup();
+                HomepageElementsFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                WebsiteSearchFunctionFeature.FeatureTearDown();
+                HomepageElementsFeature.FeatureTearDown();
             }
         }
     }

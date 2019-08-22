@@ -49,7 +49,7 @@ namespace FunkyBDD.SxS.Framework
             Driver.Navigate().GoToUrl(_testURL);
         }
 
-        [Given(@"I change the language to (.*)"), When(@"I change the language to (.*)")]
+        [Given(@"I change the language to '(.*)'"), When(@"I change the language to '(.*)'")]
         public void GivenIChangeTheLanguageTo(string lang)
         {
             ReadOnlyCollection<IWebElement> langNavi = Driver.FindElementsOrDefault(By.CssSelector("[class$='language'] li"), 10);

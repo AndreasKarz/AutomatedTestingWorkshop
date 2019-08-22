@@ -1,5 +1,7 @@
 ﻿using FunkyBDD.SxS.Framework.Selenium.Pages;
 using SwissLife.SxS.Helpers;
+using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using TechTalk.SpecFlow;
 using Xunit;
@@ -66,6 +68,23 @@ namespace FunkyBDD.SxS.Framework.Specs
         public void WhenICallAPageNotExists()
         {
             Hooks.Driver.Navigate().GoToUrl("https://www.swisslife.ch/funkyBDD.html");
+        }
+
+        [Then(@"the TableComparer should work right")]
+        public void ThenTheTableComparerShouldWorkRight(Table sTable)
+        {
+            DataTable tTable = new DataTable();
+            tTable.Clear();
+            tTable.Columns.Add("Col1");
+            tTable.Columns.Add("Col2");
+            tTable.Columns.Add("Col3");
+            DataRow _row = tTable.NewRow();
+            _row["Col1"] = "Value 1";
+            _row["Col2"] = "Value 2";
+            _row["Col3"] = "Value 3";
+            tTable.Rows.Add(_row);
+            List<string> result = SpecflowHelpers.CompareTables(sTable, tTable);
+            Assert.True(result.Count == 0, $"\r\n{string.Join("\r\n", result)}\r\n");
         }
 
     }
