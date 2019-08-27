@@ -1,1003 +1,455 @@
-# Automated Testing with Specflow, xUnit and Selenium
+BDD / Acceptance-Testing / E2E
 
-## Overview
+ 
 
-This workshop shows the interaction of the individual components Specflow, xUnit and Selenium. 
-The focus is on Selenium and the development of a framework with reusable components.
+# What is **B**ehavior **D**riven **D**evelopment?
 
-The Visual Studio base solution for this workshop is located at [GitHub](https://github.com/AndreasKarz/AutomatedTestingWorkshop). 
+In software engineering, behavior-driven development (BDD) is an Agile software development process that encourages collaboration among developers, QA and non-technical or business participants in a software project.
 
-### BDD
+BDD is largely facilitated using a simple domain-specific language (DSL) using natural language constructs (e.g., English-like sentences) that can express the behavior and the expected outcomes. Test scripts have long been a popular application of DSLs with varying degrees of sophistication. BDD is considered an effective technical practice especially when the "problem space" of the business problem to solve is complex.
 
-Automated testing is a central aspect of Behavior Driven Development. To understand the idea behind BDD, the following [video on YouTube](https://www.youtube.com/watch?v=PR7WIS8JYyY) is recommended.
+Acceptance criteria or scenarios, a description of each specific case of the narrative. Such a scenario has the following structure:
 
-### Specflow
+·        It starts by specifying the initial condition that is assumed to be true at the beginning of the scenario. This may consist of a single clause, or several.
 
-Specflow is the C#/Visual Studio version of Cucumber. Specflow connects the Gherkin feature files with .net code and generates tests from them. 
+·        It then states which event triggers the start of the scenario.
 
-Specflow parses the feature files and connects them to the C# step files, which connect to the browser via Selenium.
+·        Finally, it states the expected outcome, in one or more clauses.
 
-### xUnit
+The following video shows in a short example how to work out the description and what must be considered. [YouTube BDD example](https://www.youtube.com/watch?v=M238SpxRtqA) (3:12)
 
-xUnit is required in the step files to verify the assertions. Also can an additional logging be implemented with xUnit, with which e.g. alarms can be triggered automatically.
+How everything works together is shown in [this presentation](https://prezi.com/p/1yygbt5c9kni/).
 
-### Selenium
+# Tools in this workshop
 
-*Selenium automates browsers*. What you do with that power is entirely up to you. Primarily, it is for automating web applications for testing purposes. 
+The following list gives a rudimentary overview of what is being worked with in this workshop. You will learn the details later in this workshop.
 
-## Framework Setup
+## SpecFlow
 
-On [GitHub](https://github.com/AndreasKarz/AutomatedTestingWorkshop) you will find a base solution for Visual Studio. Nevertheless, the structure should be understood. In addition, the preparations must also be carried out when using the base solution.
-
-### Visual Studio Extension
-
-As a first step the Specflow Extension for Visual Studio must be installed, if not already done. Please read the [original Specflow manual](https://specflow.org/getting-started/#InstallSetup). After that Visual Studio must be restarted and the automatic update of the extension must be deactivated immediately. `[Extensions]` ` [Manage Extensions]`
-
-### The Nuget packages
-
-In the base solution, the following packages are installed:
-
-#### SpecFlow.xUnit 2.4.0
-
-Test connector between Specflow and xUnit to run the tests in the testrunner. For all the possible configuration options please visit the [original documentation](https://specflow.org/documentation/Configuration/) of Specflow. **Use exactly this version, all others have little bugs or are not compatible**
-
-#### xunit.runner.visualstudio
-
-Visual Studio test runner 
-
-#### Selenium.Support & Selenium.Firefox.WebDriver
-
-As default browser for development we use the Firefox.
-
-#### FunkyBDD.SxS.Helpers
-
-...
-
-#### FunkyBDD.SxS.Selenium.APOM
-
-...
-
-#### FunkyBDD.SxS.Selenium.Browserstack
-
-...appsettings.browserstack.json
-
-#### FunkyBDD.SxS.Selenium.WebDriver
-
-...
-
-#### FunkyBDD.SxS.Selenium.WebElement
-
-...
-
-### Set the environment variables
-
-In order to be as flexible as possible during configuration and so that the same tests are executed later on different platforms, all dynamic values should be handled using environment variables.
-For this workshop we need the following two environment variables:
-
-```
-TEST_URL => http://automationpractice.com/
-
-TEST_BROWSER => Chrome
-```
-
-To set environment variables in Windows, press  `WIN`  and  `BREAK`  and then select  `Advanced system settings`  =>  `Environment Variables` .
-
-### Hooks
-
-A powerful feature of Specflow is the ability to work with hooks. This allows not only recurring steps to be handled centrally, they also extend the test execution workflow .
-
-### Folder structure
-
-Now we prepare the directory structure before we check with a first small test whether our base works as expected and everything is installed and configured correctly.
-
-As first folder we need one with the name `GherkinSpecs`.  The remaining folders will be created later.
-
-### First base test
-
-To validate the base framework create the file `FrameworkTests.feature` in the folder `GherkinSpecs`. In it we describe as an expectation that the browser should be opened with our test page and then checked a dummy assertion. 
-
-```gh
-Feature: The base framework works well
-	In order to 
-		run automated tests
-	As a 
-		tester
-	I want to 
-		have a working base framework
-
-Scenario: All packages correctly installed
-	Given I open the test page
-	When I do nothing
-	Then The dummy assertion works
-```
-
-The Given will be in the hooks but for the When and the Then step we need a step file. Create for this in the same folder the file FrameworkTests.feature.steps.cs
-
-```c#
-using TechTalk.SpecFlow;
-using Xunit;
-
-namespace AutomatedTestingWorkshop.GherkinSpecs
-{
-    [Binding]
-    public sealed class FrameworkTests
-    {
-        [When(@"I do nothing")]
-        public void WhenIDoNothing()
-        {
-            
-        }
-
-        [Then(@"The dummy assertion works")]
-        public void DummyAssertionWorks()
-        {
-            Assert.Equal(1, 1);
-        }
-    }
-}
-
-```
-
-Run a rebuild of the solution and open the Test Window in Visual Studio. Now you will find the first test and you can run it. If the test goes green, the installation and configuration is correct.
-
-## Specflow
-
-Specflow is the C#/Visual Studio version of Cucumber. Specflow connects the Gherkin feature files with .net code and generates tests from them. 
-
-Specflow parses the feature files and connects them to the C# step files, which connect to the browser via Selenium.
-
-### Feature files (Gherkin)
-
-In the feature files, the product owner or business analyst defines the expectations of the product. The syntax used for this is Gherkin, an understandable description language that is an interface between business and IT.
-
-For more details visit the [original documentation](https://specflow.org/documentation/Using-Gherkin-Language-in-SpecFlow/) 
-
-The Gherkin language defines the structure and a basic syntax for describing tests and consists of the following components:
-
-#### Feature
-
-The feature element provides a header for the feature file. The feature element includes the name and a high level description of the corresponding feature in your application. SpecFlow generates a unit test class for the feature element, with the class name derived from the name of the feature.
-
-#### Scenarios
-
-A feature file may contain multiple scenarios used to describe the feature's acceptance tests. Scenarios have a name and can consist of multiple scenario steps. 
-
-#### Table and multi-line text arguments
-
-You can include tables and multi-line arguments in scenario steps. These are used by the step definitions and are either passed as additional `Table` or `string` arguments.
-
-#### Tags
-
-Tags are markers that can be assigned to features and scenarios. Assigning a tag to a feature is equivalent to assigning the tag to all scenarios in the feature file. 
-
-If your unit test framework does not support categories, you can still use tags to implement special logic for tagged scenarios in hooks, scoped bindings or step definitions by querying the tag property.
-
-#### Background
-
-The background language element allows specifying a common precondition for all scenarios in a feature file. The background part of the file can contain one or more scenario steps that are executed before any other steps of the scenarios. 
-
-#### Scenario Outlines
-
-Scenario outlines can be used to define data-driven acceptance tests. They can be also seen as scenario templates. The scenario outline always consists of a scenario template specification (a scenario with data placeholders using the `<placeholder>` syntax) and a set of examples that provide values for the placeholders. 
-
-Each Scenario will run once for each data set.
-
-#### Comments
-
-You can add comment lines to the feature files at any place by starting the line with `#`. Be careful however, as comments in your specification can be a sign that acceptance criteria have been specified wrongly.
-
-#### Example
-
-Copy the file GherkinSample.feature.txt in the folder `GherkinSpecs` and remove the postfix .txt from the filename. Then open the file in Visual Studio.  
-
-All the purple code means that the corresponding steps do not yet exist in the scenarios. So create in the same folder the *SpecFlow Step Definition* file `GherkinSample.feature.steps.cs`
-
-Now we can create all the steps for the scenarios.
-
-##### Scenario: Show tops for women 
-
-The Given step is set by the background. Set the cursor on the first purple line an then press F12 in Visual Studio. A dialog appears asking if the glue code should be copied to the clipboard. Click on Yes and passing the code into the step file.
-
-```Ghe
-Scenario: Show tops for women
-	# Given is set by background
-		And I have click on the Tab WOMEN
-	When I click on the category Tops
-	Then I see two items
-```
-
-```c#
-[Given(@"I have click on the Tab WOMEN")]
-public void GivenIHaveClickOnTheTabWOMEN()
-{
-    ScenarioContext.Current.Pending();
-}
-
-```
-
-When you save the file, the purple color will removes from the step into the scenario and when you now press F12, Visual Studio go to the corresponding step.
-
-Repeat this for each step in this scenario, remove from every step the line ScenarioContext.Current.Pending(); and save the file. 
-
-When you now rebuild the solution there will be another test wich only open the browser and close it after the scenario.
-
-##### Scenario Outline: Test the search function
-
-Repeat the steps above for this scenario. When you now run this test, this scenario will be executed twice. This is also displayed in the test runner.
-
-```Ghe
-Scenario Outline: Test the search function
-	# Given is set by background
-	When I search for <therm>
-	Then I will recieve <count> results
-	Examples: 
-	| therm | count |
-	| shoe  | 7     |
-	| funky | 0     |
-```
-
-```c#
-[When(@"I search for (.*)")]
-public void WhenISearchForShoe(string Therm)
-{
-
-}
-
-[Then(@"I will recieve (.*) results")]
-public void ThenIWillRecieveResults(int Results)
-{
-
-}
-```
-
-As you see in the steps, we have now parameters that we can use later.
-
-#### Scenario: Check the tabs
-
-Repeat the steps above for this scenario. Now you see, we have a table as argument with different values.  
-
-In contrast to the Outline scenario, the Scenarion is executed only once and all data is delivered as a table for the step. The data from the table must now be processed within the step.
-
-```Ghe
-Scenario: Check the tabs
-	# Given is set by background
-	Then I see all my tabs
-    | Tab | Label    |
-    | 1   | WOMEN    |
-    | 2   | DRESSES  |
-    | 3   | T-SHIRTS |
-```
-
-```c#
-[Then(@"I see all my tabs")]
-public void ThenISeeAllMyTabs(Table table)
-{
-    
-}
-
-```
-
-When you debug the selected test and set a breakpoint into the step then you see the data in the table var.
-
-### Hooks
-
-SpecFlow comes with some predefined hooks that are executed after some events are fired during the tests’ execution. To make an analogy, think about TestInitialize and TestCleanup from MSTest framework. For more information and a description of all the possibilities read [this article](https://www.automatetheplanet.com/extend-test-execution-workflow-specflow-hooks/).
-
-In this example I have rename the Class1.cs from the template to Hooks.cs and then I have implemented a solid base functionality. 
-
-#### BeforeScenario
-
-This code will run before each scenario starts. In this example we have two BeforeScenario hooks with a different order.  
-
-The first `BeforeFeature` hook read the configuration for the browser from the environment variable and set the value to the class property. 
-
-*Why don't we do that in a BeforeFeature hook?* With this technique we can use later  tags to execute specific scenarios (e.g. tests only for mobile platforms) on specific platforms. This will be discussed later in the workshop as the second `BeforeFeature` hook.
-
-The third `BeforeFeature` hook now initializes the desired browser.
-
-#### AfterScenario
-
-This code runs after each scenario. In our example we use it to close the browser and dispose the driver instance.
-
-#### AfterFeature
-
-This code runs after the complete test of all scenarios. In this example I use it to destroy all open driver processes.
-
-#### The first global Given
-
-In this example we always need to open out testpage. This will be a given step in the Hooks class. This step read the URL from the environment variable and set the value to the class property. This step can you now use in every feature file and if change on time the name of the environment variable for example than you only change the code at one place.
-
-```c#
-[Given(@"I open the test page")]
-public void IOpenTheTestPage()
-{
-    if (Environment.GetEnvironmentVariable("TEST_URL") == null)
-    {
-        _testURL = "http://automationpractice.com/";
-    }
-    else
-    {
-        _testURL = Environment.GetEnvironmentVariable("TEST_URL");
-    }
-    Driver.Navigate().GoToUrl(_testURL);
-}
-```
-
-You will find the complete code on [GitHub](https://github.com/AndreasKarz/AutomatedTestingWorkshop). 
-
-### Step files
-
-The step file contains the so-called glue code, which establishes the connection between the Gherkin code and the Selenium objects, which we will get to know later.
-
-I recommend the same name for naming as the feature file with the postfix .steps.cs. So the feature and step files are always together.
-
-If steps occur in several feature files, they should be moved to the hooks.
-
-### Tags
-
-Tags are markers that can be assigned to features and scenarios. Assigning a tag to a feature is equivalent to assigning the tag to all scenarios in the feature file. 
-
-On the one hand, you can use the tags to execute scenarios grouped in the test runner. This can be used, for example, to define whether certain scenarios are to be executed every hour.
-
-On the other hand, certain processes can also be executed in the hooks using scope binding.
-
-```Ghe
-@Firefox
-Scenario: Test only for Firefox
-	# Given is set by background
-```
-
-In our example we use  tags to set the browser for special scenarios. For this example copy the code below in the hooks file.
-
-```c#
-[BeforeScenario(Order = 2)]
-[Scope(Tag = "Chrome")]
-public void SetChrome()
-{
-    _browserName = "Chrome";
-}
-
-[BeforeScenario(Order = 2)]
-[Scope(Tag = "Firefox")]
-public void SetFirefox()
-{
-    _browserName = "Firefox";
-}
-```
-
-To use the Firefox browser, we need to install the Firefox Webdriver Package first.
-
-Run `Install-Package Selenium.Firefox.WebDriver` in the Package Manager Console and add the line `using OpenQA.Selenium.Firefox;` at the head of the hooks file.
-
-Then insert the code below in the switch(browser) as new case
-
-```c#
-case "Firefox":
-	FirefoxOptions firefoxOptions = new FirefoxOptions();
-	firefoxOptions.AcceptInsecureCertificates = true;
-	firefoxOptions.AddArguments("-purgecaches", "-private");
-	Driver = new FirefoxDriver("./", firefoxOptions);
-	break;
-```
-
-When you now run the new test "Test only for Firefox" this scenario should run allways in Firefox.
-
-The concept behind it is simple. 
-In [`BeforeScenario(Order = 1)]` the browser is read from the environment variable. If no environment variable is set, Chrome is used as default (e.g. for local development). Now all tests in the CD pipeline can be executed with different browsers by writing a different browser into the environment variable during each run.
-The `[BeforeScenario(Order = 2)]` now checks whether the browser is explicitly overridden by a tag. This is especially necessary if certain tests are to be executed on mobile devices only, for example. 
-In `[BeforeScenario(Order = 3)]` the corresponding browser will be initialized.
-
-For more detailed information about hooks I recommend the post [Using Hooks to Extend Test Execution Workflow]( https://www.automatetheplanet.com/extend-test-execution-workflow-specflow-hooks/) 
+SpecFlow is the backbone of BDD and Agile Development and generates the corresponding test flows from the Gherkin descriptions.
 
 ## xUnit
 
-xUnit is required as test runner and in the step files to verify the assertions. 
-
-### Assertion
-
-The assertion is needed in the [Then...] steps to validate the expected result. A small dummy sample you will find in the *GherkinSample.feature.steps.cs* file.
-
-With assertions, one point is very important:
-
-**Each scenario should only contain ONE test!** 
-
-Otherwise you will never know if everything works as expected. If, for example, 5 tests are executed in one scenario and the 3rd test terminates with an error, then it is not clear whether points 4 and 5 would have worked.
-
-Therefore again very important: **ONE scenario contains ONE test**!
-
-For the most common assertion please checkout this [cheat sheet](https://lukewickstead.wordpress.com/2013/01/16/xunit-cheat-sheet/#index73) from line #73
-
-### Configuration
-
-For the configuration details please visit the [original documentation](https://xunit.github.io/docs/configuring-with-json)
-
-### Getting Test Results in Visual Studio Team Services
-
-Please visit the [original documentation](https://xunit.github.io/docs/getting-test-results-in-vsts)
-
-## Atomic Design
-
-Before we come to the most important part of the workshop, we make a short excursion to the topic atomic design to understand. This will help us later to build a clean and modular framework.
-
-Please read also the [original documentation](http://bradfrost.com/blog/post/atomic-web-design/) from Brad Frost. 
-
-### Atoms
-
-Atoms are the basic building blocks of matter. Applied to web interfaces, atoms are our HTML tags, such as a form label, an input or a button.   
-
-#### Default Props
-
-All the atoms have some defaut values like width, height or the position.  To simplify the structure of the atoms, the extender class SwissLife.Selenium.IWebElement.DefaultProps.cs is implemented. It provides all getter for the default props. Thus only the specific properties and methods have to be defined in the atom itself.
-
-```c#
-using OpenQA.Selenium;
-using SwissLife.Selenium.IWebElement.DefaultProps;
-
-public class InputText : DefaultProps
-{
-    //InputText has now all the getters for the default props
-}
-```
-
-### Molecules
-
-Molecules are React components at altitude. Let's take again the example text input. The HTML input element is the atom, but our React component is a combination of html input field, label and a description and/or error message. At this moment the React component TextInput is a molecule.
-
-Molecule tests are carried out directly on the style guide. This includes, for example, that the floating label floats correctly and does not overlay the content above or that an error message has the correct color and is displayed at the correct position.
-
-Also all tests of the Responsive Design and the behavior on mobile devices of the molecules are executed on the styleguide.
-
-### Organisms
-
-An organism is a composition of different molecules. This can be, for example, a contact form. This consists of several text entries - some with special functions, such as an e-mail field.
-
-The form is therefore an organism whose basic behavior is also tested on the style guide - especially the responsive behavior. 
-
-### Pages
-
-The pages are a composition of different organisms and/or molecules.
-
-The tests of the pages are those which will be performed later in the CD pipeline. These only contain the functional tests, i.e. if the correct error messages are displayed, the correct confirmation pages appear or the texts are correct in all languages.
-
-### Summary
-
-With this understanding we can build the framework very modular and flexible. 
-
-Imagine if the color of a text input changes at some point. With the concept of Atomic design we only have to adapt the test to the text atom of the TextInput molecule and that only in one place.
+xUnit is the Test runner for Visual Studio and is also used for the assertions of the expected test results.
 
 ## Selenium
 
-*Selenium automates browsers*. What you do with that power is entirely up to you.  And Selenium is not only powerful, but is also the main ingredient in automated UI testing.
+Selenium automates browsers. That's it! What you do with that power is entirely up to you. Primarily, it is for automating web applications for testing purposes, but is certainly not limited to just that.
 
-### Driver
+## Browserstack
 
-The driver is the API to the corresponding browser. Later Selenium will use this API to control the browser remotely. Each browser has its own driver, the corresponding browser is installed, of course.
+Browserstack is an online service with which Selenium can run tests on real (mobile) devices and older browsers.
 
-For platforms, which are not locally available, BrowserStack can be used. This topic will be dealt with in another workshop. 
+## Azure DevOps
 
-Currently we have installed the driver for Chrome and Firefox in our example. Now it's time to install the rest as well over the Nuget Console.
+Simplify and speed up the DevOps process with Azure DevOps services. The following labs will help you to get started with Azure DevOps services to automate software delivery and meet business needs.
 
-```npm
-Install-Package Selenium.WebDriver.IEDriver
-Install-Package Selenium.WebDriver.IEDriver64
-Install-Package Selenium.WebDriver.MicrosoftDriver
+In this Workshop we need Azure DevOps for the build pipelines to run the tests.
 
-```
+# Base Solution
 
-#### Cookies
+As a working tool for this workshop there is a [solution on GitHub](https://github.com/AndreasKarz/AutomatedTestingWorkshop), in which all necessary elements and examples are available.
 
-TODO
+## Visual Studio 2019
 
-#### Navigate
+The Base Solution is built for Visual Studio 2019. You can download the [Visual Studio Community Edition](https://visualstudio.microsoft.com/vs/community/) for free at Microsoft.
 
-TODO
+## Visual Studio Extension
 
-#### Timeouts
+This solution contains the extension for Visual Studio 2019 called `TechTalk.SpecFlow.VisualStudioIntegration.vsix`. Run this file to install the extension. 
 
-Specifies the amount of time the driver should wait when searching for an element if it is not immediately present.
+After that, **immediately** after starting Visual Studio in the [Extenions], [Manage Extensions] menu, the automatic update for this extension must be disabled.
 
-When searching for a single element, the driver should poll the page until the element has been found, or this timeout expires before throwing a *NoSuchElementException*. When searching for multiple elements, the driver should poll the page until at least one element has been found or this timeout has expired.
+## Important NuGet Packages
 
-In our example, this is defined in the hooks in the _initDriver method. 
+The following NuGet Packages are already included in the Basis Solution. I only list the most important ones, which will be discussed later in the workshop. 
 
-```c#
-Wait = new OpenQA.Selenium.Support.UI.WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-```
+### SpecFlow and SpecFlow.xUnit
 
-#### Options/Capabilities
+We work with the version 2.4.0 – this is the last version without bugs. You should not update the version!
 
-This is used to make basic settings for the browser. This setting is debrecated, but will be used later for BrowserStack.
+### FunkyBDD.SxS.Helpers
 
-In this workshop we will therefore use the Driver options. Please copy the following code in the hooks of the _initBrowser method into the switch:
+Some helper classes for the SxS Framework.
 
-```c#
-case "Edge":
-    Driver = new EdgeDriver("./");
-    break;
-case "IE":
-    InternetExplorerOptions options = new InternetExplorerOptions();
-    options.EnsureCleanSession = true;
-    options.IgnoreZoomLevel = true;               
-    options.IntroduceInstabilityByIgnoringProtectedModeSettings = true;
-    options.InitialBrowserUrl = "https://www.swisslife.com/";
-    Driver = new InternetExplorerDriver("./", options);
-    Driver.Navigate().Refresh();
-    Driver.LocalStorageClear();
-    break;
+### FunkyBDD.SxS.Selenium.APOM
 
-```
+Base class for Selenium Page Objects for the POM and APOM principles.
 
-And in the *BeforeScenario Order = 2* region
+### FunkyBDD.SxS.Selenium.Browserstack
 
-```c#
-[BeforeScenario(Order = 2)]
-[Scope(Tag = "Edge")]
-public void SetEdge()
-{
-    _browserName = "Edge";
+Selenium Helpers for a smarter use of Browserstack.
+
+### FunkyBDD.SxS.Selenium.WebDriver
+
+Extensions for the Selenium IWebDriver with often missed functions.
+
+### FunkyBDD.SxS.Selenium.WebElement
+
+Extensions for the Selenium IWebElement. Integrates properties and methods that are always needed. Supports the POM and APOM principles.
+
+## Preparation
+
+To use the Base Solution some preparations are needed. 
+
+### Browser configuration
+
+If you do not want to work with different and real browsers, you can skip this step. Otherwise go to [Browserstack](https://www.browserstack.com/) and open a free trial account. Then copy the appsettings.browserstack.json from the root path into the bin folder. In this file, all the Browsers are defined to use later.
+
+How BrowserStack works, especially the BrowserStack local, you can read on the [original documentation](https://www.browserstack.com/local-testing#command-line) of Browserstack.
+
+### Environment variables
+
+Since there should be no credentials in the configuration file, the username and access key must be set as environment variables. The exact names of this vars are BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY.
+
+ 
+
+# Know-how
+
+## Specflow/Gherkin
+
+### Basics
+
+Gherkin uses a set of special keywords to give structure and meaning to executable specifications. Each keyword is translated to many spoken languages; in this reference we’ll use English.
+
+It’s very simple, but please read the [original reference](https://cucumber.io/docs/gherkin/reference/) to understand the code. There is also a nice [Video Tutorial](https://www.youtube.com/watch?v=xFrEXX1FrSQ) about Gherkin and Specflow.
+
+### Parameters & Tables
+
+In most situations it is necessary to work with data. SpecFlow provides three basic methods for this purpose.
+
+#### Basic Parameters
+
+If you put in a Gherkin step a number or a text in apostrophes, SpecFlow interprets this as parameter.
+
+When I'm searching for '*provision*'
+
+​        [When(@"I'm searching for '(.*)'")]
+
+​        public void WhenIProvision(string term)
+
+​        {
+
+​            Homepage.SearchFor(term + Keys.Enter);
+
+​            SearchResultPage = new SearchResultPage(Hooks.Driver);
+
+​        }
+
+#### Data Tables
+
+If you have one step with multiple values, you can use a Data Table. If necessary, each step can have its own data table. This is often used for form input. In the following example, the data table is needed for the assertion 'Then'.
+
+*@distribution*
+
+Scenario: All distribution teasers are visible
+
+​       Given I change the language to '*EN*'
+
+​       Then I see the following distribution teasers
+
+​       | *title*                                       | *subTitle*             |
+
+​       | Future provisions and wealth accumulation   | To product selection |
+
+​       | Property and asset insurance                | To product selection |
+
+​       | Health insurance                            | To product selection |
+
+​       | Property financing and residential property | To product selection |
+
+​        [Then(@"I see the following distribution teasers")]
+
+​        public void ThenISeeTheFollowingDistributionTeasers(Table teasers)
+
+​        {
+
+…
+
 }
 
-[BeforeScenario(Order = 2)]
-[Scope(Tag = "IE")]
-public void SetIE()
-{
-    _browserName = "IE";
-}
-```
+#### Examples Table
 
-#### Extensions
+It is often necessary to run through scenarios with different data. This is particularly useful for multilingual elements. In this case, scenario outlines with example tables are used. 
 
-The driver does not (yet) provide certain functionalities. Therefore we have installed the extension *SwissLife.Selenium.Webdriver.Extensions*. More information about you will find in the source code on [GitHub](https://github.com/AndreasKarz/SeleniumWebdriverExtensions).
+The big difference here is that the scenario is executed once for each data row. The values are defined as variables in the different steps. And pay attention: it’s a Scenario Outline, not just a scenario!
 
-This package will add the following functionalities to the driver:
+Scenario Outline: Check the titel translation
 
-##### NavigateToPath
+​       When I change the language to '*<lang>*'
 
-Allows to navigate with relative URLs
+​       Then The banner title should be '*<title>*'
 
-##### LocalStorage
+​             And The family teaser title schould be '*<familyTeaserTitle>*'
 
-LocalStorageSetItem, LocalStorageGetItem and LocalStorageClear to manipulate the LocalStorage.
+​             And The occupational teaser title schould be '*<occupationalTeaserTitle>*'
 
-##### IsElementPresent
+​       Examples: 
 
-Check if a element is really present with some options
+​       | *lang* | *title*                                          | *familyTeaserTitle*               | *occupationalTeaserTitle*    |
 
-##### GetElementSafe
+​       | DE   | Die passende Vorsorge für jede Lebensphase     | Vorsorge für Familien           | Berufliche Vorsorge        |
 
-Get a element if this really exists and it's visible and it's clickable.
+​       | EN   | The right provision for each stage of life     | Future provisions for families  | Occupational provisions    |
 
-##### SetMobileSize
+​       | FR   | La prévoyance adaptée à chaque phase de la vie | La prévoyance pour les familles | Prévoyance professionnelle |
 
-Resize the browser to a specific width and height. Without parameters the function will use 750 * 1024 pixels.
+​       | IT   | La previdenza giusta per ogni fase della vita  | Previdenza per la famiglia      | Previdenza professionale   |
 
-##### ExecuteScript
+The values are then forwarded by SpecFlow as parameters.
 
-Wrapper methode to execute a JavaScript.
+​        [Then(@"The occupational teaser title schould be '(.*)'")]
 
-##### GetRootDirectory
+​        public void ThenTheOccupationalTeaserTitleSchouldBe(string title)
 
-Get the repository root directory
+​        {
 
-### Selectors (By)
+​            Assert.Equal(title, Homepage.Banner.OccupationalTeaser.Header.Text);
 
-The selectors are used to identify the DOM elements in the browser. His used as a parameter for the driver method FindElement or FindElements, which searches for the element in the DOM.
+​        }
 
-Here it is extremely important to have understood Atomic Design. You should always keep in mind what could be changed in the design and how the selectors have to be structured so that any changes can be tested with as little effort as possible.
+### Tagging
 
-The most important point here is certainly that you don't always search the whole DOM, but identify it cascadingly through the elements.
+In Gherkin, both features and scenarios can be marked with tags. These tags can be used later to filter the tests. So tests can be categorized easily.
 
-First you identify the organism "form", then within the form the molecule "first name" and then via the atom "TextInput" the corresponding atom within the molecule.  So the composition of the page can be changed later - the tests will continue to work.
+As an example, each feature can have the number of the corresponding PBI as a tag, or business and style guide tests can be executed in separate pipelines at different times.
 
-==**In a well built framework the selectors are only needed inside the atoms.**==
+Feature tags are inherited to each scenario.
 
-#### Name
+*@Business @Homepage*
 
-Finds the element using the name. 
+Feature: Homepage elements
 
-```c#
-Driver.FindElement(By.Name("firstname"));
-```
+*@distribution*
 
-#### ClassName
+Scenario: All distribution teasers are visible
 
-Finds the element using the ClassName. Should only be used within organisms, because a class name is rarely unique within the whole DOM. Attention, a change in the design can have an impact to the test.
+### Step Dateien
 
-```c#
-Driver.FindElement(By.ClassName("m-rich-text"));
-```
+If the behaviors are described in Gherkin, the necessary glue code must be written. This is done with the so-called step files. In these the necessary code is implemented for each step.
 
-#### TagName
+A new step file is created with [Add], [New Item...], [SpecFlow], [SpecFlow Step Definition]. The name should be the same as the one of the feature file, simply extended with 'steps.cs'. This way the files are always displayed in the same way.
 
-If you search a specific unique element inside a molecule you can use this selector. It should be noted, however, that if a 2nd identical element suddenly enters the same atom, e.g. an image or a link, the selector will no longer work as expected.
+The example steps can then be deleted. But it is very important to work with scoped binding. So only the corresponding feature file sees the defined glue code.
 
-```c#
-Driver.FindElement(By.TagName("span"));
-```
+​    [Binding, Scope(Feature = "Homepage elements")]
 
-#### Id
+​    public sealed class HomepageSteps
 
-The clearest selector. Within the DOM, an ID must be unique, so this selector always finds the correct element. 
+For a new code block for a step the cursor can be placed on the step in the Gherkin file and F12 pressed. This copies the basic structure of the glue code to the clipboard. This can then simply be pasted into the step file.
 
-It is recommended that at least every organism has a unique ID.
+### Hooks
 
-```c#
-Driver.FindElement(By.Id("contact_form"));
-```
+For recurring steps that are required in all or most features, a hooks file can be created. This must NOT have scoped binding and will be seen by all feature files.
 
-#### LinkText
+​        [Given(@"I open the test page")]
 
-Find the link element with matching visible text. Attention: The link text must be completely identical! This also means that as soon as even a part of the link text changes, this selector will no longer work.
+​        public void IOpenTheTestPage()
 
-```c#
-Driver.FindElement(By.LinkText("Next"));
-```
+​        {
 
-#### PartialLinkText
+​            _testURL = "https://www.swisslife.ch/";
 
-Find the link element with partial matching visible text. This selector still works if the link text changes marginally as long as the searched term continues to occur.
+​            Driver.Navigate().GoToUrl(_testURL);
 
-```c#
-Driver.FindElement(By.PartialLinkText("Step"));
-```
+​        }
 
-#### CssSelector
+In the hooks file you can also define which code should be executed at which position of the test. For example, you can generate a screenshot after each scenario.
 
-This is a very powerful selector and works on the principle of jQuery. Not all pseudo classes are supported, but most work.
+Further information and which hooks are provided by SpecFlow can be found in [this documentation](https://www.automatetheplanet.com/extend-test-execution-workflow-specflow-hooks/).
 
-To test the CSS selectors the Chrome extension [Selector Gadget](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb) is very helpful.
+### Extensions
 
-```c#
-Driver.FindElement(By.CssSelector(".g-lg-span-6:nth-child(1)"));
-```
+Inside the package FunkyBDD.SxS.Helpers is a helper method to compare SpecFlow tables with C# data tables.
 
-#### xPath
+Scenario: Validate FunkyBDD.SxS.Helpers table comparer
 
-Also a very powerful selector, but also one with high danger potential. xPath searches through the DOM with path instructions and a beginner error is to always describe the path from the root.
+​       Then the TableComparer should work right
 
-With the smallest position shift of an element, such a selector will no longer work!
+​       | *Col1*    | *Col2*    | *Col3*    |
 
-Therefore, it is very important to think in Atomic Design and build the path.
+​       | Value 1 | Value 2 | Value 3 |
 
-```c#
-Driver.FindElement(By.XPath(".//*[@data-test-id='" + Id + "']"));
-```
+​            List<string> result = SpecflowHelpers.CompareTables(sTable, tTable);
 
-#### Best practice
+​            Assert.True(result.Count == 0, $"\r\n{string.Join("\r\n", result)}\r\n");
 
-##### Think atomic
+### Conclusion
 
-This applies to both development and testing. This is the only way to gain the flexibility not to have to rewrite all tests when changing the UI.
+Plan first:
 
-```html
-<form id="contactform">
-    <input name="firstname" />
-    <input name="password" />
-</form>
-<form id="loginform">
-    <input name="username" />
-    <input name="password" />
-</form>
-```
+\- which steps occur in several Scenarion and/or features?
 
-```c#
-// molecule "contactform"
-_parent = Driver.FindElement(By.Id("contact_form"));
-_password = _parent.FindElement(By.Name("password");
-// molecule "loginform"
-_parent = Driver.FindElement(By.Id("login_form"));
-_password = _parent.FindElement(By.Name("password");
+\- What needs to be done before a test, a featuture or a scenario?
 
-```
+\- What must be executed after a test, after a Featuture or after a Scenario?
 
-With this strategy, for example, the forms can be placed anywhere within the UI and several forms can be present simultaneously in the same UI -- the "password" molecule will always be uniquely identifiable via the _parent.
+All of this must be implemented in the Hooks.cs.
 
-##### Use the right selectors to stay flexible
+In the step files that specifically belong to a feature file, always work with scoped binding. But also remember that the scope will be lost if the feature title is renamed.
 
-For each selector, think about what influence a possible change in the UI will have on it.
+Avoid code duplication from the beginning.
 
-A link text is often changed -- i.e. the LinkText selector will no longer work, the PartialLinkText will.
+## Selenium
 
-Class names are also very dangerous. Especially selectors on class names of known frameworks like Bootstrap. If this is changed, ALL these selectors will not work anymore. If at all, pseudo classes should be used. But what happens if CSS classes suddenly have the same name as your pseudo classes?
+Selenium automates browsers. That's it! What you do with that power is entirely up to you. Primarily, it is for automating web applications for testing purposes, but is certainly not limited to just that.
 
-What happens if the designer suddenly has the idea to display the error message with a DIV instead of a SPAN? Your TagName selector will stop working at the same moment! Better give the container of the error message a pseudotag like data-test-type="errormsg" and then use an xPath selector. So you stay flexible.
+### WebDriver
 
-##### Use the right way
+The Selenium WebDriver is the interface to the different browsers. To work with it easily, there is a browser class in the package FunkyBDD.SxS.Helpers. This makes it very easy to create a WebDriver instance including additional parameters.
 
-A little personal tip -- work from the atoms towards the organism and not vice versa.
+Browser = new Browser("FirefoxLocal");
+ Driver = Browser.Driver;
+ Driver.SetSeleniumFlag();
 
-### Properties
+You can see which browsers are already preconfigured in the file appsettings.browserstack.json.
 
-Once the element has been identified, the various properties can now be accessed. 
+### Selectors
 
-As an example we extend the step `[Then(@"I see all my tabs")]` in the step file *GherkinSample.feature.steps.cs* and we use a selector that we should NEVER use in practice.
+If you have the connection to the browser, you can now select the different DOM elements.
 
-```c#
-IWebElement PhoneNumber = Hooks.Driver.FindElement(By.CssSelector(".shop-phone"));
-```
+IWebElement element = Driver.FindElement (By.Id("distributionteaser"));
 
-Now we can access the properties of this element.
+An overview of all possibilities can be found in [this documentation](https://www.guru99.com/locators-in-selenium-ide.html).
 
-#### Text
+### Ranorex Selocity
 
-Returns the text of the element, in this example the text with the phone number. 
+To localize the elements easily, Ranorex Selocity is a very powerful extension for Chrome. I always test in Firefox, but I just like the console of the Chrome browser better.
 
-```c#
-string Label = PhoneNumber.Text;
-```
+How it works you will see in [this short video](https://www.ranorex.com/selocity/browser-extension/#SelocityVideo). I also use Selocity very often to check my selectors. I don't work like in the video, where I copy the selectors 1:1, but I work with inheritances. But more about this topic APOM.
 
-#### Location
+### Properties & methods
 
-Gets a System.Drawing.Point object containing the coordinates of the upper-left corner of this element relative to the upper-left corner of the page.
+If an element is found, various properties can be queried from it.  The same applies to the methods that can be executed on an element.  
 
-```c#
-int Left = PhoneNumber.Location.X;
-int Top = PhoneNumber.Location.Y;
-```
+An overview over all methods you will find in [this documentation](https://www.toolsqa.com/selenium-webdriver/c-sharp/webelement-commands-in-c/).
 
-#### Size
+### Extension
 
-Gets the height and width  of this element in pixel;
+Since this requires a lot of hard work, I built the NuGet package FunkyBDD.SxS.Selenium.WebElement, which provides all basic properties and methods as a base class.
 
-```c#
-int Height = PhoneNumber.Size.Height;
-int Width = PhoneNumber.Size.Width;
-```
+using FunkyBDD.SxS.Selenium.WebElement;
+ …
+ public class DistributionTeaser : DefaultProps
 
-#### GetCssValue
+IWebDriver Driver           get the wrapped driver of the element. Needed for APOM
+ string BrowserName      get the name of the wrapped browser. Often needed for responsive tests
+ int Width
+ int Height
+ bool Displayed                  
+ bool Enabled                     means also clickable
+ bool Found                        means the element is there
+ int X, int Y                         the coordinates of the element with IOS fallback
+ string color
+ string BackgroundColor
 
-Get the specific CSS value of this element.
+### APOM
 
-```c#
-string VAlign = PhoneNumber.GetCssValue("vertical-align");
-```
+APOM is the combination of Atomic Design and the Selenium Page Object Model paradigm. With this procedure model, the tests are not only robust but also maintainable. The initial effort is somewhat higher, but later when writing the tests, this time is loosely recovered. 
 
-#### Enabled
+#### Atomic Design
 
-This property must not be confused with Displayed. Enabled returns whether a form element can be used or not. EVERY element returns true, except form elements that are explicitly set to disabled.
+To understand the really simple principle of Atomic design, you should read this [short documentation](http://bradfrost.com/blog/post/atomic-web-design/). 
 
-```c#
-bool Enabled = PhoneNumber.Enabled;
-```
+#### APOM in practice
 
-#### Displayed
+Each individual page consists of several organisms. These in turn consist of several molecules, which in turn consist of several atoms. It is important that a) the organisms are clearly identifiable (e.g. by IDs) and that they reference themselves downwards. 
 
-Gets a value indicating whether or not this element is displayed.
+This means that we search for a molecule, then we search for it isolated in the referencing organism. And this method goes on to the atoms.
 
-```c#
-bool Displayed = PhoneNumber.Displayed;
-```
+Thus one is independent where and in which hierarchy level the organisms, molecules and atoms are placed. 
 
-#### GetAttribute
+And if something changes for example with an icon (and that will happen sooner or later), then only the corresponding atom must be adapted, and all tests work again.
 
-Gets the value of the specified attribute for this element. The attribute's current value. Returns a null if the value is not set.
+But the biggest advantage is that the developers can easily assemble their tests later with this kit and only have to develop the assertions.
 
-```c#
-string ClassName = PhoneNumber.GetAttribute("class");
-```
+### BrowserStack
 
-#### TagName
+Browserstack is an online service with which Selenium can run tests on real (mobile) devices and older browsers.
 
-Gets the tag name of this element.
+In order to work with [BrowserStack](https://www.browserstack.com/), you first need an account. You can open a test account. Then you have to copy the file appsettings.browserstack.json into the bin folder in the solution to get an initial configuration.
 
-```c#
-string TagName = PhoneNumber.TagName;
-```
+Since there should be no credentials in the configuration file, the username and access key must be set as environment variables. The exact names of this vars are BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY.
 
-### Methods
+After that you can simple initialize a Browser instance with
 
-Now it is not the idea only to query values but also to execute actions. Therefore Selenium also offers methods for the elements.
+Browser = new Browser("iPhoneXS");
+ Driver = Browser.Driver;
+ 
+ 
 
-#### SendKeys()
+## xUnit
 
-Sends a text or control character to an input field. 
+xUnit is used in this project as a testrunner as well as for the assertions. As a developer, however, you are mainly concerned with assertions.
 
-```c#
-Searchbox.SendKeys("Shoe");
-```
+A cheat sheet for the assertions can be [found here](https://lukewickstead.wordpress.com/2013/01/16/xunit-cheat-sheet/).
 
-#### Clear()
+## API Testing
 
-Clears the content of this input element.
+In this basic solution also a very simple API test is implemented. Instead of using a browser via Selenium a simple API class is used. So that no browser is opened, the corresponding feature is marked with the tag @API. This is evaluated in the hooks.
 
-```c#
-Searchbox.Clear();
-```
+We will use this later in the How-to section.
 
-#### Submit()
+## Azure DevOps
 
-If this current element is a form, or an element within a form, then this will be submitted to the web server. If this causes the current page to change, then this method will block until the new page is loaded.
+To run the tests in Azure DevOps, there is a short [introduction Video](https://www.youtube.com/watch?v=vTWV1x1lg6Q). For detailed information about Azure DevOps testing, read the [Original Documentation](https://docs.microsoft.com/en-us/azure/devops/pipelines/test/test-glossary?view=azure-devops).
 
-```c#
-Searchbox.Submit();
-```
+# How-to
 
-#### Thread.Sleep()
+## Create a new Feature
 
-A method that does not come from selenium but from C# -- but is very often needed.
+First and most important: Feature Files should NOT be copied! The connection to the code behind gets lost with the renaming and you have to fix everything manually.
 
-For animations, for example, you have to wait some time to validate properties until the animation is finished. Or after a submit to wait to the new content.
+To create a new feature file, you should always use the normal dialog in Visual Studio. Right click the Folder [Specs] and then select [Add], [New Item…], [SpecFlow], [SpecFlow Feature File]. So you will have a new, clean feature file.
 
-```c#
-Thread.Sleep(1000);
-```
+If the feature file is completed with tags and a meaningful feature title, the corresponding step file can be created. Right click the Folder [Specs] and then select [Add], [New Item…], [SpecFlow], [SpecFlow Step Definition]. The name should be the same as the feature file with the extension .steps.cs. Thus, the files are always displayed under each other. After the step file is generated, make it scoped. [Binding, Scope(Feature = "Homepage elements")].
 
-#### Click()
+Now you can write the Gherkin descriptions and with F12 on the Gherkin steps you can create the step definitions for the step file.
 
-Simulate a click on this element.
+## Create a new Atom
 
-```c#
-DemoProduct.Click();
-```
+To create a new Atom (the smallest part in the APOM) you can create a new class in the folder [Atoms] and extend this class with the base class [DefaultProps]. Then create a constructor inside to initialize the atom. 
 
-# Compose the framework
+Here it is important to work with the parent, i.e. the organism, as a parameter. So we look for the atom within the organism and you have a clear reference.
 
-Now we can start building our framework. Here we have to remember the Atomic design all the time. In this example we focus on the search.
+Creating a new molecule or organism
 
-## The atoms
+A new molecule or organism is created like an atom. Again, it is important to pass the parent on and use it in the constructor. So, these elements can not only be reused very flexibly but the APOM becomes very maintainable.
 
-First we need 2 atoms input type="text" and the button with the icon. 
+## Create a new page
 
-### InputText
+To create a new page, create a new class and then extend the base class [Basepage]. Then you can create a new page with the organisms you have created. Which is again composed of molecules that are a group of atoms. This is the APOM principle.
 
-For the DOM object `<input type="text">`  move the file /_CodeSnippets/InputText.txt to /Selenium/Atoms/InputText.cs and then open it in the editor.
+ 
 
-The atom has a constructor that searches within the parent (molecule) for a HTML input of type text.
+## Link Feature Steps to APOM
 
-Now we have to consider which properties and methods we will need for this atom. Always think about the future, what might come. The DefaultProps come from the class SwissLife.Selenium.IWebElement.DefaultProps, so you only have to define what is needed additionally.
+Once the APOM is created, the Feature Steps can consume the elements. In the constructor of the step file the corresponding page is instantiated
 
-For atoms it is very important to always document in the code. This simplifies cooperation enormously later on.
+​        public FrameworkTests()
 
-### Button
+​        {
 
-move the file /_CodeSnippets/Button.txt to /Selenium/Atoms/Button.cs and then open it in the editor.
+​            Homepage = new Homepage(Hooks.Driver);
 
-After the constructor, we need only the methode Click() and the Icon to validate the right icon.
+​        }
 
-## The molecule
+Then you can access all sub-elements, e.g. Homepage.Banner.FamilyTeaser.Header.Text
 
-No we can compose the search box as molecule. Create the class SearchBox.cs inside /Selenium/Molecules with the code below.
+## Run Tests only with specific filters
 
-```c#
-using OpenQA.Selenium;
-using Framework.Selenium.Atoms;
+As an example, how you can run only specific tests in the pipeline later, take a look to the file [RunTests.bat]
 
-namespace Framework.Selenium.Molecules
-{
-    public class SearchBox
-    {
-        private IWebElement _component;
-        public InputText Input;
-        public Button Button;
+## Test with BrowserStack
 
-        public SearchBox(IWebElement Parent, By by)
-        {
-            _component = Hooks.Driver.FindElement(by);
-            Input = new InputText(_component);
-            Button = new Button(_component);
-        }
-    }
-}
+## Testing with long running workflows
 
-```
+2 Pipelines
 
-You see, the more we work our way up, the less code we need. It's more and more just a composing.
+## Management of failed tests
 
-## The organism
+Teams Messaging 
 
-The first organism in our example is the header row with the logo. In our example, only the search box is filled with the logo, you can expand the organism later.
+ 
 
-Create the class HeaderRow.cs inside /Selenium/Organisms with the code below.
-
-```c#
-using OpenQA.Selenium;
-using Framework.Selenium.Molecules;
-
-namespace Framework.Selenium.Organisms
-{
-    public class HeaderRow
-    {
-        private IWebElement _component;
-        public SearchBox Search;
-
-        public HeaderRow(IWebElement Parent, By by)
-        {
-            _component = Hooks.Driver.FindElement(by);
-            Search = new SearchBox(_component, By.Id("searchbox"));
-        }
-    }
-}
-
-```
-
-A little less code. Pay attention to the namespacing: It's structured in a way that you can't directly access the molecules or atoms.
-
-In this example we select the molecule with the ID. If the molecule had no ID, we could have instantiated it using the tagName form.
-
-## The page
-
-Now we can build the page object. Create the class Homepage.cs inside /Selenium/Pages with the code below.
-
-```c#
-using OpenQA.Selenium;
-using Framework.Selenium.Organisms;
-
-namespace Framework.Selenium.Pages
-{
-    public class Homepage
-    {
-        private IWebElement _component;
-        public HeaderRow Header;
-
-        public Homepage()
-        {
-            _component = Hooks.Driver.FindElement(By.TagName("body"));
-            Header = new HeaderRow(_component, By.CssSelector("#header div:nth-of-type(3) .container .row"));
-        }
-    }
-}
-```
-
-The selector for the organism is a little bit tricky. In practice, this element should have a unique ID.
-
-## Use the element
-
-If we have done everything right, we can use the page object in the step file and build the tests accordingly.
-
-Extend the scenario Test the search function with a new And after the Given comment
-
-```Gher
-And Im on the Homepage
-```
-
-Copy the step code with F12 an copy it into the step file. Extend the using section and add a private property _homepage. 
-
-Then instantiate the homepage in the new Given.
-
-```c#
-using TechTalk.SpecFlow;
-using Framework.Selenium.Pages;
-using Xunit;
-
-namespace AutomatedTestingWorkshop.GherkinSpecs
-{
-    [Binding]
-    public sealed class GherkinSample
-    {
-        private Homepage _homepage;
-
-        [Given(@"Im on the Homepage")]
-        public void GivenImOnTheHomepage()
-        {
-            _homepage = new Homepage();
-        }
-...
-
-```
-
-Then you can extend the step I search for...
-
-```c#
-        [When(@"I search for (.*)")]
-        public void WhenISearchForShoe(string Therm)
-        {
-            _homepage.Header.Search.Input.SendKeys(Therm);
-            _homepage.Header.Search.Button.Click();
-        }
-```
-
-Do you realize how quickly we can write tests when atoms and molecules exist?
-
-## Next step
-
-Examine the test results page. For the current example we need a new atom span, a new molecule counter, a new organism SearchResultHeader and a new page SearchResults.
-
-In which scenario step do you have to initialize Page SearchResults?
-
-What else do you have to do to validate the number of hits?
-
-
-
-
-
+ 
