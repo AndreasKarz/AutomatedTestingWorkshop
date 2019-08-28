@@ -1,4 +1,4 @@
-# BDD / E2E Testing with **S**pecflow-**x**Unit-**S**elenium
+# Automated E2E Testing with **S**pecflow-**x**Unit-**S**elenium / BDD
 
 ## What is **B**ehavior **D**riven **D**evelopment?
 In software engineering, behavior-driven development (BDD) is an Agile software development process that encourages collaboration among developers, QA and non-technical or business participants in a software project.
