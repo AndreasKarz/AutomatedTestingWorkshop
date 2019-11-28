@@ -97,7 +97,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API.cs" />
+    <Compile Include="Api.cs" />
     <Compile Include="APOM\Atoms\Header.cs" />
     <Compile Include="APOM\Atoms\LinkButton.cs" />
     <Compile Include="APOM\Molecules\DistributionTeaserItem.cs" />

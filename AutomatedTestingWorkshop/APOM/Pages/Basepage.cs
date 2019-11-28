@@ -17,6 +17,7 @@ namespace FunkyBDD.SxS.Framework.Selenium.Pages
 
         public void SearchFor(string term)
         {
+            Component.SendKeys(Keys.Home);
             Wait.Until(ExpectedConditions.ElementIsVisible(By.Id("a11y-header-search-link"))).Click();
             Wait.Until(ExpectedConditions.ElementIsVisible(By.Id("gsc-i-id1"))).SendKeys(term);
         }

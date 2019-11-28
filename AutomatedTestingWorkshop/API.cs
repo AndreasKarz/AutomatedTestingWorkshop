@@ -3,13 +3,13 @@ using System.Net;
 
 namespace FunkyBDD.SxS.Framework
 {
-    public class API
+    public class Api
     {
-        private WebRequest request;
-        private HttpWebResponse response;
-        private string  responseContent;
+        private readonly WebRequest request;
+        private readonly HttpWebResponse response;
+        private readonly string  responseContent;
 
-        public API(string url)
+        public Api(string url)
         {
             request = WebRequest.Create(url);
             request.Credentials = CredentialCache.DefaultCredentials;
