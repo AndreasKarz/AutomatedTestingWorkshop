@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2046
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32611.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomatedTestingWorkshop", "AutomatedTestingWorkshop\AutomatedTestingWorkshop.csproj", "{6C2249FE-861C-476F-BA43-1501C8CC63E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomatedTestingWorkshop", "AutomatedTestingWorkshop.csproj", "{23ABC2EE-7F5E-4130-AFFE-A39AAC532DAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6C2249FE-861C-476F-BA43-1501C8CC63E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C2249FE-861C-476F-BA43-1501C8CC63E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C2249FE-861C-476F-BA43-1501C8CC63E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C2249FE-861C-476F-BA43-1501C8CC63E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23ABC2EE-7F5E-4130-AFFE-A39AAC532DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23ABC2EE-7F5E-4130-AFFE-A39AAC532DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23ABC2EE-7F5E-4130-AFFE-A39AAC532DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23ABC2EE-7F5E-4130-AFFE-A39AAC532DAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6621DDB8-6FC1-402E-89FE-98D0C5517360}
+		SolutionGuid = {8F0D957D-D219-405F-9384-1CB5F86866FD}
 	EndGlobalSection
 EndGlobal

@@ -1,7 +1,0 @@
-﻿{
-  "appDomain": "denied",
-  "parallelizeAssembly": false,
-  "parallelizeTestCollections": false,
-  "maxParallelThreads": 1,
-  "methodDisplay": "method"
-}
